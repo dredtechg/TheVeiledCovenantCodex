@@ -30,36 +30,27 @@ body{margin:0; background:var(--bg); color:var(--txt); font-family:var(--mono);
   border-radius:3px; cursor:pointer}
 .toc-toggle:hover{border-color:var(--b); color:#fff}
 
-/* ---------- layout: rail sits in a fixed left gutter, content in the right ----------
-   The rail is position:fixed, so it is out of the flow entirely. The content column
-   reserves its width with a margin — nothing can ever be drawn under it. */
-.frame{max-width:1560px; margin:0 auto; padding:0 30px 90px 0}
+/* ---------- layout: content in a centred column, tabs across the top ---------- */
+.frame{max-width:1240px; margin:0 auto; padding:0 26px 90px}
 
-/* ---------- contents rail (fixed gutter) ---------- */
-.rail{position:fixed; top:46px; left:max(0px, calc((100vw - 1560px) / 2));
-  width:262px; height:calc(100vh - 46px); overflow-y:auto;
-  padding:30px 22px 40px 26px; border-right:1px solid var(--line);
-  background:var(--bg); z-index:30; scrollbar-width:thin}
-.rail::-webkit-scrollbar{width:6px}
-.rail::-webkit-scrollbar-thumb{background:var(--line2); border-radius:3px}
-.rail-h{font-size:10.5px; letter-spacing:.24em; color:var(--mute); margin:0 0 14px}
-.rail a{display:block; padding:5px 0; text-decoration:none; border-left:2px solid transparent;
-  padding-left:12px; margin-left:-14px; transition:border-color .14s}
-.rail a:hover{border-left-color:#c2565f}
-.rail .r-num{display:block; font-size:10px; color:var(--mute); letter-spacing:.08em}
-.rail .r-name{display:block; font-size:12.5px; color:var(--dim)}
-
-/* every direct child of the frame is offset past the rail */
-.frame > *{margin-left:324px}
-@media(max-width:1600px){ .frame > *{margin-left:290px} }
-@media(max-width:1180px){ .frame > *{margin-left:268px} }
-.rail .r-num{font-size:10.5px; color:var(--mute); letter-spacing:.06em}
-.rail .r-name{font-size:12.5px; color:var(--dim); letter-spacing:.02em}
-.rail a:hover .r-name{color:#fff}
+/* ---------- contents tabs (horizontal bar under the top bar) ---------- */
+.tabs{position:sticky; top:41px; z-index:35; background:rgba(7,9,11,.96);
+  border-bottom:1px solid var(--line2); backdrop-filter:blur(6px);
+  display:flex; gap:2px; overflow-x:auto; padding:7px 8px;
+  scrollbar-width:thin; margin:0 -26px 26px}
+.tabs::-webkit-scrollbar{height:5px}
+.tabs::-webkit-scrollbar-thumb{background:var(--line2); border-radius:3px}
+.tab{display:flex; flex-direction:column; gap:1px; flex:0 0 auto;
+  padding:7px 13px 8px; text-decoration:none; border-radius:3px;
+  border-bottom:2px solid transparent; transition:background .14s, border-color .14s}
+.tab:hover{background:#12161a; border-bottom-color:#c2565f}
+.tab .t-num{font-size:9.5px; letter-spacing:.12em; color:var(--mute)}
+.tab .t-name{font-size:12px; letter-spacing:.02em; color:var(--dim); white-space:nowrap}
+.tab:hover .t-name{color:#fff}
 
 /* ---------- header block ---------- */
-.head{grid-column:1 / -1; border:1px solid var(--line2); border-radius:4px;
-  background:var(--panel); margin:26px 0 40px; overflow:hidden}
+.head{border:1px solid var(--line2); border-radius:4px;
+  background:var(--panel); margin:0 0 40px; overflow:hidden}
 .head-top{display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
   padding:11px 16px; background:#0b0e11; border-bottom:1px solid var(--line);
   font-size:11px; letter-spacing:.1em; color:var(--mute)}
@@ -159,17 +150,15 @@ table.sched td.name{font-weight:600}
 .foot .note{margin-bottom:0}
 
 /* ---------- responsive ---------- */
-@media(max-width:1180px){
-  .frame{padding:0 20px 80px}
-  .frame > *{margin-left:0}
-  .toc-toggle{display:inline-block}
-  .rail{position:static; top:auto; left:auto; width:auto; height:auto;
-    display:none; overflow:visible; background:transparent;
-    border-right:0; border-bottom:1px solid var(--line2);
-    padding:20px 0 24px; margin:0 0 28px}
-  .rail.open{display:block}
-  .head{margin-top:0}
-  section{scroll-margin-top:60px}
+@media(max-width:820px){
+  .frame{padding:0 16px 70px}
+  .topbar-in{padding:9px 16px}
+  .topbar .meta{display:none}
+  .tabs{margin:0 -16px 22px; padding:6px 8px}
+  .tab{padding:6px 10px 7px}
+  .t-num{display:none}
+  .t-name{font-size:11.5px}
+  section{scroll-margin-top:96px}
 }
 @media(max-width:600px){
   .log-body{padding:22px 16px 24px}
@@ -184,31 +173,29 @@ table.sched td.name{font-weight:600}
   <div class="topbar-in">
     <span class="brand"><b>CEPHALON LOG</b> · THE VEILED COVENANT</span>
     <span class="meta">RECORD-KEEPER: VESPERION &nbsp;·&nbsp; 9 VOICES</span>
-    <button class="toc-toggle" onclick="document.querySelector('.rail').classList.toggle('open')">CONTENTS</button>
   </div>
 </div>
 
-<div class="frame">
+<nav class="tabs" aria-label="Contents">
+    <a class="tab" href="#oath"><span class="t-num">OATH</span><span class="t-name">The nine lines</span></a>
+    <a class="tab" href="#what-we-are"><span class="t-num">I</span><span class="t-name">What We Are</span></a>
+    <a class="tab" href="#how-it-began"><span class="t-num">II</span><span class="t-name">How It Began</span></a>
+    <a class="tab" href="#nine-ascendant"><span class="t-num">III</span><span class="t-name">The Nine Ascendant</span></a>
+    <a class="tab" href="#founder-ash"><span class="t-num">01 · VESPERION</span><span class="t-name">Vesperion</span></a>
+    <a class="tab" href="#founder-excalibur"><span class="t-num">02 · AURELIS</span><span class="t-name">Aurelis</span></a>
+    <a class="tab" href="#founder-mag"><span class="t-num">03 · CAEDRA</span><span class="t-name">Caedra</span></a>
+    <a class="tab" href="#founder-trinity"><span class="t-num">04 · SOLENNE</span><span class="t-name">Solenne</span></a>
+    <a class="tab" href="#founder-ivara"><span class="t-num">05 · TALLIS</span><span class="t-name">Tallis</span></a>
+    <a class="tab" href="#founder-rhino"><span class="t-num">06 · DORIAN</span><span class="t-name">Dorian</span></a>
+    <a class="tab" href="#founder-harrow"><span class="t-num">07 · VIGIL</span><span class="t-name">Vigil</span></a>
+    <a class="tab" href="#founder-styanax"><span class="t-num">08 · ORREN</span><span class="t-name">Orren</span></a>
+    <a class="tab" href="#founder-wisp"><span class="t-num">09 · LYRAE</span><span class="t-name">Lyrae</span></a>
+    <a class="tab" href="#chorus"><span class="t-num">XIII</span><span class="t-name">The Chorus of Nine</span></a>
+    <a class="tab" href="#recovery"><span class="t-num">XIV</span><span class="t-name">Recovery Schedule</span></a>
+    <a class="tab" href="#structure"><span class="t-num">XV</span><span class="t-name">Structure</span></a>
+</nav>
 
-  <nav class="rail" aria-label="Contents">
-    <p class="rail-h">RECORD INDEX</p>
-    <a href="#oath"><span class="r-num">OATH</span><span class="r-name">The nine lines</span></a>
-      <a href="#what-we-are"><span class="r-num">I</span><span class="r-name">What We Are</span></a>
-      <a href="#how-it-began"><span class="r-num">II</span><span class="r-name">How It Began</span></a>
-      <a href="#nine-ascendant"><span class="r-num">III</span><span class="r-name">The Nine Ascendant</span></a>
-      <a href="#founder-ash"><span class="r-num">01 · VESPERION</span><span class="r-name">Vesperion</span></a>
-      <a href="#founder-excalibur"><span class="r-num">02 · AURELIS</span><span class="r-name">Aurelis</span></a>
-      <a href="#founder-mag"><span class="r-num">03 · CAEDRA</span><span class="r-name">Caedra</span></a>
-      <a href="#founder-trinity"><span class="r-num">04 · SOLENNE</span><span class="r-name">Solenne</span></a>
-      <a href="#founder-ivara"><span class="r-num">05 · TALLIS</span><span class="r-name">Tallis</span></a>
-      <a href="#founder-rhino"><span class="r-num">06 · DORIAN</span><span class="r-name">Dorian</span></a>
-      <a href="#founder-harrow"><span class="r-num">07 · VIGIL</span><span class="r-name">Vigil</span></a>
-      <a href="#founder-styanax"><span class="r-num">08 · ORREN</span><span class="r-name">Orren</span></a>
-      <a href="#founder-wisp"><span class="r-num">09 · LYRAE</span><span class="r-name">Lyrae</span></a>
-      <a href="#chorus"><span class="r-num">XIII</span><span class="r-name">The Chorus of Nine</span></a>
-      <a href="#recovery"><span class="r-num">XIV</span><span class="r-name">Recovery Schedule</span></a>
-      <a href="#structure"><span class="r-num">XV</span><span class="r-name">Structure</span></a>
-  </nav>
+<div class="frame">
 
   <header class="head">
     <div class="head-top">
