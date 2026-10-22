@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CEPHALON LOG — The Veiled Covenant</title>
+<style>
+:root{
+  --bg:#07090b; --panel:#0e1114; --line:#1d2329; --line2:#2b333b;
+  --txt:#c8d2d8; --dim:#7d8b95; --faint:#57636c; --mute:#4a555d;
+  --a:#8c2b32; --b:#e08b92; --d:#6e5a5e;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:16px}
+body{margin:0; background:var(--bg); color:var(--txt); font-family:var(--mono);
+  font-size:14px; line-height:1.62; -webkit-font-smoothing:antialiased}
+::selection{background:#8c2b32; color:#fff}
+
+/* ---------- top bar (fixed, never overlaps content) ---------- */
+.topbar{position:sticky; top:0; z-index:40; background:rgba(7,9,11,.94);
+  border-bottom:1px solid var(--line); backdrop-filter:blur(6px)}
+.topbar-in{max-width:1320px; margin:0 auto; padding:10px 22px;
+  display:flex; align-items:center; gap:18px; justify-content:space-between}
+.topbar .brand{font-size:12px; letter-spacing:.16em; color:var(--dim); white-space:nowrap}
+.topbar .brand b{color:#c2565f; font-weight:600}
+.topbar .meta{font-size:11px; letter-spacing:.1em; color:var(--mute); white-space:nowrap}
+.toc-toggle{display:none; background:none; border:1px solid var(--line2); color:var(--txt);
+  font-family:var(--mono); font-size:12px; letter-spacing:.14em; padding:6px 11px;
+  border-radius:3px; cursor:pointer}
+.toc-toggle:hover{border-color:var(--b); color:#fff}
+
+/* ---------- layout: content in a centred column, tabs across the top ---------- */
+.frame{max-width:1240px; margin:0 auto; padding:0 26px 90px}
+
+/* ---------- contents tabs (horizontal bar under the top bar) ---------- */
+.tabs{position:sticky; top:41px; z-index:35; background:rgba(7,9,11,.96);
+  border-bottom:1px solid var(--line2); backdrop-filter:blur(6px);
+  display:flex; gap:2px; overflow-x:auto; padding:7px 8px;
+  scrollbar-width:thin; margin:0 -26px 26px}
+.tabs::-webkit-scrollbar{height:5px}
+.tabs::-webkit-scrollbar-thumb{background:var(--line2); border-radius:3px}
+.tab{display:flex; flex-direction:column; gap:1px; flex:0 0 auto;
+  padding:7px 13px 8px; text-decoration:none; border-radius:3px;
+  border-bottom:2px solid transparent; transition:background .14s, border-color .14s}
+.tab:hover{background:#12161a; border-bottom-color:#c2565f}
+.tab .t-num{font-size:9.5px; letter-spacing:.12em; color:var(--mute)}
+.tab .t-name{font-size:12px; letter-spacing:.02em; color:var(--dim); white-space:nowrap}
+.tab:hover .t-name{color:#fff}
+
+/* ---------- opening block ---------- */
+.cover-line{font-size:10.5px; letter-spacing:.3em; color:#8c2b32; margin:0 0 18px}
+.cover-title{font-size:clamp(30px,5vw,46px); line-height:1.05; margin:0 0 12px;
+  color:#eef2f4; font-weight:600; letter-spacing:-.01em}
+.cover-sub{font-size:13.5px; color:#7d8b95; margin:0 0 20px}
+.cover-motto{font-size:11.5px; letter-spacing:.32em; color:#c2565f; margin:0 0 22px}
+.cover-rule{height:1px; background:var(--line2); margin:0 0 28px}
+
+/* ---------- header block (retired) ---------- */
+.head{border:1px solid var(--line2); border-radius:4px;
+  background:var(--panel); margin:0 0 40px; overflow:hidden}
+.head-top{display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
+  padding:11px 16px; background:#0b0e11; border-bottom:1px solid var(--line);
+  font-size:11px; letter-spacing:.1em; color:var(--mute)}
+.head-top .ok{color:#3aa368}
+.head-body{padding:30px 26px 28px}
+.head-body .pre{font-size:11px; letter-spacing:.3em; color:#8c2b32; margin:0 0 16px}
+.head-body h1{font-family:var(--mono); font-size:clamp(26px,5vw,44px); line-height:1.1;
+  margin:0 0 12px; color:#eef2f4; font-weight:600; letter-spacing:-.01em}
+.head-body .sub{font-size:13.5px; color:var(--dim); margin:0 0 22px}
+.head-body .motto{font-size:12px; letter-spacing:.32em; color:#c2565f; margin:0 0 20px}
+.head-body .byline{font-size:12.5px; color:var(--mute); margin:0; line-height:1.75}
+.rule{height:1px; background:var(--line); margin:22px 0}
+
+/* ---------- sections ---------- */
+section{scroll-margin-top:70px}
+.plain{grid-column:1 / -1; margin-bottom:52px}
+h2.sec{font-size:15px; letter-spacing:.14em; color:#e6ebee; margin:0 0 6px; font-weight:600}
+h2.sec span{color:#8c2b32; margin-right:10px}
+.hrule{height:1px; background:var(--line); margin:14px 0 22px; position:relative}
+.hrule::after{content:""; position:absolute; left:0; top:0; width:74px; height:1px; background:var(--a)}
+p{margin:0 0 15px}
+.lede{color:#aab6be}
+.note{font-size:12.5px; color:var(--mute); font-style:italic}
+
+/* oath */
+.oath{list-style:none; margin:22px 0 0; padding:0; counter-reset:l}
+.oath li{counter-increment:l; padding:11px 0 11px 54px; position:relative;
+  border-bottom:1px solid var(--line); color:#c8d2d8}
+.oath li:last-child{border-bottom:0}
+.oath li::before{content:"0" counter(l); position:absolute; left:0; top:12px;
+  font-size:10.5px; color:#8c2b32; letter-spacing:.1em}
+.oath-close{margin-top:20px; font-size:12.5px; letter-spacing:.24em; color:#c2565f}
+.v-gloss{display:block; margin-top:7px; font-size:12.5px; color:var(--dim);
+  line-height:1.6; padding-left:0}
+.oath li .v-gloss::before{content:""}
+
+/* reliquary table */
+.tablewrap{overflow-x:auto; margin:20px 0 0; scrollbar-width:thin}
+.tablewrap::-webkit-scrollbar{height:6px}
+.tablewrap::-webkit-scrollbar-thumb{background:var(--line2); border-radius:3px}
+table.reliq{min-width:820px}
+table.reliq td{font-size:12px; line-height:1.5}
+table.reliq td.name{color:var(--b); font-weight:600; letter-spacing:.02em}
+table.reliq tr.red td.name{color:#4a555d; font-weight:400}
+table.reliq tr.red td{color:#3d474e}
+
+/* rows / tables */
+.rowlist{margin:22px 0 0; border-top:1px solid var(--line2)}
+.row{display:grid; grid-template-columns:34px 128px 178px 1fr; gap:14px;
+  padding:10px 0; border-bottom:1px solid var(--line); font-size:12.5px}
+.row .rn{color:#8c2b32}
+.row .nm{color:#eef2f4; font-weight:600; letter-spacing:.03em}
+.row .mn{color:#b9c4cb}
+.row .ds{color:var(--dim)}
+@media(max-width:820px){.row{grid-template-columns:30px 1fr; gap:4px}
+  .row .mn,.row .ds{grid-column:2}}
+
+table.sched{width:100%; border-collapse:collapse; margin:20px 0 0; font-size:12.5px}
+table.sched th{text-align:left; padding:9px 12px 9px 0; border-bottom:1px solid var(--line2);
+  font-size:10.5px; letter-spacing:.18em; color:var(--mute); font-weight:600}
+table.sched td{padding:10px 12px 10px 0; border-bottom:1px solid var(--line); vertical-align:top}
+table.sched td.d{color:var(--dim)}
+table.sched td.name{font-weight:600}
+
+/* account block */
+.acct{border-left:2px solid var(--a); padding-left:22px; margin:20px 0 0}
+.acct p{color:#b9c4cb; margin:0 0 16px}
+
+/* ---------- cephalon log entries ---------- */
+.entry{grid-column:1 / -1; margin-bottom:44px; border:1px solid var(--line2);
+  border-radius:4px; background:var(--panel); overflow:hidden}
+.log-head{background:#0b0e11; border-bottom:1px solid var(--line); padding:0}
+.log-head-row{display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+  padding:11px 16px; border-bottom:1px solid var(--line)}
+.log-id{font-size:11px; letter-spacing:.14em; color:var(--b); font-weight:600}
+.log-title{font-size:11.5px; letter-spacing:.12em; color:#8b979f; flex:1; min-width:180px}
+.log-status{font-size:10px; letter-spacing:.16em; color:var(--d);
+  border:1px solid var(--line2); padding:2px 8px; border-radius:2px}
+.log-sub{padding:9px 16px; font-size:11.5px; color:var(--mute); letter-spacing:.03em}
+.log-body{padding:26px 22px 30px}
+
+.doctrine{color:var(--b); font-size:14px; margin:0 0 22px; padding-bottom:18px;
+  border-bottom:1px solid var(--line)}
+
+.field{display:grid; grid-template-columns:104px 1fr; gap:14px; margin:0 0 5px; font-size:12.5px}
+.field-k{color:var(--d); letter-spacing:.1em; font-size:10.5px; padding-top:2px}
+.field-v{color:#b9c4cb}
+@media(max-width:640px){.field{grid-template-columns:1fr; gap:2px}}
+
+.sec-label{font-size:10.5px; letter-spacing:.22em; color:var(--a); margin:26px 0 10px;
+  font-weight:600}
+.sec-label::before{content:"— "; color:var(--line2)}
+.lg{color:#b9c4cb; margin:0 0 14px}
+.lg-body{color:#aab6be}
+.tag{color:var(--b); letter-spacing:.12em; font-size:10.5px}
+.spine{border-left:1px solid var(--line2); padding-left:20px; margin:16px 0 0}
+.lg-note{color:var(--mute); font-size:12.5px; font-style:italic}
+.append{margin-top:26px; padding-top:20px; border-top:1px solid var(--line)}
+.append-tag{font-size:10px; letter-spacing:.2em; color:var(--mute); margin:0 0 14px}
+.append .lg{color:#9aa6ae; font-size:13px}
+
+/* defs */
+.def{margin-bottom:18px; padding-left:18px; border-left:2px solid var(--a)}
+.def h4{margin:0 0 5px; font-size:13px; color:#eef2f4; letter-spacing:.02em}
+.def p{margin:0; color:var(--dim); font-size:13px}
+
+/* spoken rite */
+.speech{margin:20px 0 0; padding:22px 24px; border:1px solid var(--line);
+  border-left:2px solid var(--a); border-radius:3px; background:#0b0e11}
+.sp-line{font-size:14px; color:var(--b); margin:0 0 14px; letter-spacing:.01em}
+.sp-body{font-size:13.5px; color:#c8d2d8; margin:0 0 16px}
+.sp-vow{font-size:13.5px; color:#b9c4cb; margin:0 0 16px; padding-left:18px;
+  border-left:1px solid var(--line2)}
+.sp-note{font-size:12.5px; color:var(--mute); font-style:italic; margin:20px 0 0;
+  padding-top:16px; border-top:1px solid var(--line)}
+
+/* operation header */
+.ophdr{display:flex; flex-wrap:wrap; gap:16px; align-items:baseline; margin:18px 0 20px;
+  padding:12px 16px; border:1px solid var(--line2); border-radius:3px; background:#0b0e11}
+.op-ref{font-size:12px; letter-spacing:.16em; color:var(--b); font-weight:600}
+.op-year{font-size:12px; letter-spacing:.1em; color:var(--dim)}
+.op-status{font-size:10.5px; letter-spacing:.14em; color:var(--mute); margin-left:auto}
+
+.foot{grid-column:1 / -1; border-top:1px solid var(--line2); padding-top:26px; margin-top:10px}
+.foot .motto{letter-spacing:.32em; color:#c2565f; font-size:12px; margin:0 0 18px}
+.foot p{font-size:12.5px; color:var(--dim); max-width:78ch}
+.foot .note{margin-bottom:0}
+
+/* ---------- responsive ---------- */
+@media(max-width:820px){
+  .frame{padding:0 16px 70px}
+  .topbar-in{padding:9px 16px}
+  .topbar .meta{display:none}
+  .tabs{margin:0 -16px 22px; padding:6px 8px}
+  .tab{padding:6px 10px 7px}
+  .t-num{display:none}
+  .t-name{font-size:11.5px}
+  section{scroll-margin-top:96px}
+}
+@media(max-width:600px){
+  .log-body{padding:22px 16px 24px}
+  .head-body{padding:24px 18px 22px}
+  table.sched td:nth-child(4){white-space:nowrap}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <span class="brand"><b>CEPHALON LOG</b> · THE VEILED COVENANT</span>
+    <span class="meta">RECORD-KEEPER: VESPERION &nbsp;·&nbsp; 9 VOICES</span>
+  </div>
+</div>
+
+<nav class="tabs" aria-label="Contents">
+    <a class="tab" href="#oath"><span class="t-name">The nine lines</span></a>
+    <a class="tab" href="#who-we-are"><span class="t-name">Who We Are</span></a>
+    <a class="tab" href="#how-it-began"><span class="t-name">How It Began</span></a>
+    <a class="tab" href="#nine-ascendant"><span class="t-name">The Nine Ascendant</span></a>
+    <a class="tab" href="#chorus"><span class="t-name">The Chorus of Nine</span></a>
+    <a class="tab" href="#founder-ash"><span class="t-name">Vesperion · Ash · Before the founding</span></a>
+    <a class="tab" href="#founder-excalibur"><span class="t-name">Aurelis · Excalibur · Twenty-one years after the founding</span></a>
+    <a class="tab" href="#founder-mag"><span class="t-name">Caedra · Mag · Sixty-six years after the founding</span></a>
+    <a class="tab" href="#founder-trinity"><span class="t-name">Solenne · Trinity · One hundred and four years after the founding</span></a>
+    <a class="tab" href="#founder-ivara"><span class="t-name">Tallis · Ivara · One hundred and fifty-two years after the founding</span></a>
+    <a class="tab" href="#founder-rhino"><span class="t-name">Dorian · Rhino · Two hundred and three years after the founding</span></a>
+    <a class="tab" href="#founder-harrow"><span class="t-name">Vigil · Harrow · Two hundred and forty-seven years after the founding. The longest search of the nine</span></a>
+    <a class="tab" href="#founder-styanax"><span class="t-name">Orren · Styanax · Two hundred and ninety-one years after the founding</span></a>
+    <a class="tab" href="#founder-wisp"><span class="t-name">Lyrae · Wisp · Three hundred and forty-four years after the founding. The last of the nine</span></a>
+    <a class="tab" href="#structure"><span class="t-name">Clan Affairs</span></a>
+    <a class="tab" href="#operations"><span class="t-name">Operations</span></a>
+    <a class="tab" href="#adversary"><span class="t-name">Col. Vorne Kall</span></a>
+</nav>
+
+<div class="frame">
+
+  
+
+  <section class="plain" id="oath" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <p class="cover-line">CODEX OF THE NINE ASCENDANT</p>
+    <h1 class="cover-title">THE VEILED COVENANT</h1>
+    <p class="cover-sub">Founding, Doctrine, and Structure</p>
+    <p class="cover-motto">FEARED, NEVER KNOWN</p>
+    <div class="cover-rule"></div>
+    <h2 class="sec"><span>000</span>THE OATH</h2>
+    <div class="hrule"></div>
+    <p class="note">Nine lines. Nine founders. Spoken by each alone, then closed by all nine together.</p>
+    <ol class="oath">
+      <li>What our forebears buried, they named an inheritance — and we name it a debt.</li>
+      <li>We shall not let the hidden go unwatched, nor the open go unexamined.</li>
+      <li>No door we close shall ever be opened again.</li>
+      <li>We shall not forget those we could not save, and we shall rejoice in those we did.</li>
+      <li>We shall know the ground before our feet rest upon it.</li>
+      <li>We shall hold what we take, and shall not be moved from it.</li>
+      <li>We shall stand between the living and the Void, and it shall not have them.</li>
+      <li>We shall not conquer. We shall not keep the unwilling. We shall not let silence excuse the forsaking of those we shield.</li>
+      <li>Let history forget our name, let our enemies fear it.</li>
+    </ol>
+    <p class="oath-close">NINE VOICES, ONE WORD. NO CROWN, NO THRONE.</p>
+    <div class="append">
+      <p class="append-tag">APPENDED · A NOTE ON PROVENANCE</p>
+      <p class="lg">This codex is not one voice. Each founder page in it was written by that founder's own Cephalon. Colour carries the same signal: every entry is inked in the Cephalon who wrote it.</p>
+      <p class="lg">Every page was then reviewed by the Unseen before entry into the Record, on her standing condition that she reads everything first. She has struck three passages, and the pages below reflect her strikes rather than the originals.</p>
+      <p class="note">— Vesperion, record-keeper</p>
+    </div>
+  </section>
+
+
+
+
+
+  <section class="plain" id="who-we-are" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>I</span>WHO WE ARE</h2>
+    <div class="hrule"></div>
+
+    <p class="sec-label">THE NINE ASCENDANT</p>
+    <p>Nine, held at the summit for life or until abdication. Equal in voice and equal in standing. The Regent convenes them, breaks their deadlocks, and alone may declare a Veiled Action — and all eight together can stop him where seven cannot.</p>
+
+    <p class="sec-label">EIGHT MANTLES, ONE WARD</p>
+    <p>The eight founders under the Regent each hold a mantle — a charge, not a territory. The Blade, the Lock, the Cradle, the Unseen, the Stone, the Chain, the Standard, the Daybreak. Every member of the Covenant belongs to the single Ward and works inside one of those charges. No founder may command more than their own mantle's worth of loyalty, and that is the rule the whole structure rests on.</p>
+
+  </section>
+
+  <section class="plain" id="how-it-began" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>II</span>HOW IT BEGAN</h2>
+    <div class="hrule"></div>
+    <p class="note">Filed by Vesperion, from the Regent's own account.</p>
+    <p class="lede">What broke the old empire's silence was not a weapon. It was a claim.</p>
+    <p>A rail-town on Ceres called Ashfall sat on a shallow basin that prospectors had been picking at for years — scrap, old plating, nothing that mattered. Then a crew cut through a floor and found a sealed vault under the settlement's own water table, and word of it went out on open channels, because the crew that found it was not the crew that could hold it.</p>
+    <p>Three factions arrived inside a week. A Corpus recovery operation came first, with equipment and a proper contract, intending to catalogue and price whatever was inside. A Grineer raiding party came second, with no interest in pricing anything. And the town's own militia came third — four hundred people who had lived on that basin their whole lives and did not intend to hand it to either of them.</p>
+    <p>What started as a standoff became a nineteen-day fight for the contents of one vault.</p>
+    <div class="append">
+      <p class="append-tag">APPENDED · THE REGENT'S PART</p>
+      <p class="note" style="margin-bottom:18px">As he gave it to me. He was reluctant, and he gave it in the order it happened.</p>
+      <div class="acct">
+        <p>I came because the salvage reports made no sense — a vault under a water table, three factions converging, a town of four thousand sitting directly on top of all of it.</p>
+        <p>I did not announce myself. I spent nineteen days inside a settlement that had three armed forces in it. Not as a commander, not as a negotiator, and not as a soldier. I did it as something none of them could see, because the militia would have been as likely to shoot a stranger as to thank him, and I did not intend to give them the chance to decide.</p>
+        <p>I broke their machines. The Corpus brought an excavation rig — a crawler that could cut the vault open in a week. On the third day it lost its starboard tracks to damage no one could explain, and the crew spent four days repairing it instead of digging. The Grineer parked two transports under the eastern overhang; on the ninth night the overhang came down on both of them. The Grineer blamed the Corpus and burned a staging ground over it. That was the point. Two of the three factions never knew I existed and spent the rest of the siege fighting each other because of work I had done.</p>
+        <p>I killed throughout, and I never hid that I had. Killing is not the part that matters. Being believed is. Nobody fears a man they cannot confirm existed, so I gave them proof — and I gave it to them repeatedly, because one body is an incident and fifteen is a condition.</p>
+        <p>Over nineteen days I took more than fifteen. Mostly Grineer, because they held the perimeter and a perimeter is where you work. A few Corpus, when their rig crews got confident and started walking the ground alone. I did not hunt for a number. I took what the ground offered, and the ground offered a great deal once two factions were openly fighting across a town I knew better than they did.</p>
+        <p>None of it looked the same twice. A sapper died at his own detonator on the sixth day. A picket was pinned upright against a water tank four hundred meters inside his own line, feet clear of the ground by an inch, an arrow through the skull holding him there upright. A fire team of four went out on the fourteenth and did not come back at all — found two days later in a drainage run they had no reason to enter, opened along a clean diagonal, the halves of each man a meter apart with no edge on them anyone could name. I used their own explosives on one, their own vehicles on another, and the rest I took with the kama, both blades, in the dark, from behind, and never once from the front.</p>
+        <p>I left the shuriken in them. That was deliberate. I will leave the work visible and the method unreadable, and a blade found in a man's throat tells them nothing about how I crossed four hundred meters of their own ground to put it there. Several of the shuriken I went back for. Not all — just enough that they knew I kept count.</p>
+        <p>I never used the same route in or out. There is no approach anyone could have reconstructed afterward, because I do not leave one. What I left was the evidence — and the evidence said nothing about how I arrived.</p>
+        <p>By the ninth day the Grineer were posting double pickets and stopping patrols after dark, because the men who went out were not always there at the end of it. A force that cannot sleep argues with itself. That is what cost them the four days the town used to move its people. The dead were the evidence. The fear was the weapon.</p>
+        <p>I moved the civilians. On the fourth day I opened the eastern drainage culvert. The water table broke three days later. Between six and seven hundred people went out that route over three nights, in shifts, at night, and I have never counted them because I never got a clean figure. The survivors described a way out they could not explain finding. That is all any of them have ever had.</p>
+        <p>None of it worked. In the third week somebody opened the inner door to keep it out of the other two factions' hands, and what was sealed behind it did not care which of them was standing there. Ashfall is a crater. The settlements around it buried their dead for a month. The count was never settled — twelve hundred at the low end, over three thousand at the high, and the true number is unknowable because the town's register burned with it.</p>
+        <p>I was there for the last four days and left when there was nothing further I could do.</p>
+      </div>
+      <p class="lg" style="margin-top:24px">He did not go to the Council. He did not go to the Lotus. He went to eight others, one at a time, in the dark, and told each of them what he had seen and what he intended to do about it — each in the hour he judged right for them, and no two of those hours were the same.</p>
+    </div>
+  </section>
+
+  <section class="plain" id="nine-ascendant" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>III</span>THE NINE ASCENDANT</h2>
+    <div class="hrule"></div>
+    <p class="lede">The nine are the Nine Ascendant — the summit, held for life or until abdication. Equal in voice and equal in standing.</p>
+
+    <p>The Regent holds three things no one else holds. He convenes the Ascendant. He casts the deciding vote when the Circle deadlocks without uniting. And he alone may declare a Veiled Action — an operation whose existence is known only to the nine.</p>
+    <p>His own seat is the Last Shadow, and it is not a mantle of work. Eight mantles, one shadow, one Ward, one roof.</p>
+    <div class="rowlist">
+      <div class="row"><span class="rn">01</span><span class="nm">ASH</span><span class="mn">THE LAST SHADOW</span><span class="ds">The Hand. Convening, the deciding word, Veiled Actions.</span></div>
+      <div class="row"><span class="rn">02</span><span class="nm">EXCALIBUR</span><span class="mn">THE FIRST EDGE</span><span class="ds">The blade, and the standard every operative is measured by.</span></div>
+      <div class="row"><span class="rn">03</span><span class="nm">MAG</span><span class="mn">THE LOCK ETERNAL</span><span class="ds">Custody — holding what cannot be destroyed.</span></div>
+      <div class="row"><span class="rn">04</span><span class="nm">TRINITY</span><span class="mn">THE CRADLE</span><span class="ds">Succor, and the moral veto over every operation.</span></div>
+      <div class="row"><span class="rn">05</span><span class="nm">IVARA</span><span class="mn">THE UNSEEN</span><span class="ds">Infiltration, and the Record itself.</span></div>
+      <div class="row"><span class="rn">06</span><span class="nm">RHINO</span><span class="mn">THE STANDING STONE</span><span class="ds">The guarantee of the way out.</span></div>
+      <div class="row"><span class="rn">07</span><span class="nm">HARROW</span><span class="mn">THE CHAINBEARER</span><span class="ds">The Threshold — the Void, the wards, and the Fallen.</span></div>
+      <div class="row"><span class="rn">08</span><span class="nm">STYANAX</span><span class="mn">THE HIGH STANDARD</span><span class="ds">Recruitment, the free colonies, and the public voice.</span></div>
+      <div class="row"><span class="rn">09</span><span class="nm">WISP</span><span class="mn">THE DAYBREAK</span><span class="ds">Discovery — and the correction of the Covenant's own target.</span></div>
+    </div>
+  </section>
+
+
+  <section class="plain" id="operations" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>XVI</span>OPERATIONS</h2>
+    <div class="hrule"></div>
+    <p class="note">Filed by the Long Sight. Concurred by the Cephalons of the squads involved. Authorised by the Regent.</p>
+    <p class="lede">Three operations in the record. Each is set out in full — reconnaissance, standing brief, and after-action, with the assessments filed against them.</p>
+    <div class="rowlist">
+      <div class="row"><span class="rn">OP-0001</span><span class="nm">FIRST STRIKE</span><span class="mn">The founding year · the first month</span><span class="ds">CLOSED — COMPLETE SUCCESS · NO LOSSES · STANDING FORMATIONS ADOPTED</span></div>
+      <div class="row"><span class="rn">OP-0004</span><span class="nm">THE FREEDOM OF SEVEL</span><span class="mn">Year 118 · ninth month</span><span class="ds">CLOSED · COMPLETE SUCCESS · NO LOSSES · CITY SELF-GOVERNING SINCE</span></div>
+      <div class="row"><span class="rn">OP-0007</span><span class="nm">THE GRAVE OF THE HOLLOW CROWN</span><span class="mn">Year 191 · third month</span><span class="ds">CLOSED · OBJECTIVE RECOVERED · ALL HANDS LOST ON TARGET · NO COVENANT LOSSES</span></div>
+    </div>
+  </section>
+
+  <section class="plain" id="first-strike" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>OP-0001</span>OPERATION FIRST STRIKE</h2>
+    <div class="hrule"></div>
+    <div class="ophdr">
+      <span class="op-ref">OP-0001</span>
+      <span class="op-year">The founding year · the first month</span>
+      <span class="op-status">CLOSED — COMPLETE SUCCESS · NO LOSSES · STANDING FORMATIONS ADOPTED</span>
+    </div>
+    <p class="note">The first operation the nine ever ran as a formation, and the operation that decided what the Covenant would be. Nine people, three elements, one ninety-second window. Nothing was improvised and nothing was left to the field, and the composition it produced — two squads of four and the Regent detached — was kept as doctrine on the strength of it and never revised.</p>
+    <p class="lede">It is called First Strike because it was the first thing the nine did as a body rather than as nine individuals, and because the Regent named it before the mantle was on the door.</p>
+    <div class="defs">
+      <div class="def"><h4>WHAT IT WAS</h4><p>A Grineer troop transport in transit to a shipyard for reverse-engineering, carrying recovered Orokin material under a battalion escort. The problem was never the escort. It was structural: three security networks — command, reactor, cargo — that do not connect to one another and each of which is wired to cover the other two. There is no single point where that ship can be taken, and all three had to fall inside the same ninety seconds.</p></div>
+      <div class="def"><h4>WHAT WAS AUTHORIZED</h4><p>The first standing brief the Covenant ever issued, written before the operation and answered line by line. It is the document that established the Vanguard and the Reliquary as permanent assignments rather than per-operation callsigns, and it is the reason those four-and-four compositions have not changed since. The Council approved the split in advance; nothing was left to the field.</p></div>
+      <div class="def"><h4>WHAT WENT WRONG</h4><p>Very little, and the record is honest about the two places it did. The relay cabinets on the command deck were heavier than Mag's own preparation had estimated, and the work had to fall to Trinity, who is not a containment specialist. And the hold had no cover at all — the Reliquary had to work entirely inside Wisp's ground, and Trinity filed afterward that a single round outside those lights would have killed Styanax outright. It did not. She filed it anyway.</p></div>
+      <div class="def"><h4>WHAT WAS HELD</h4><p>The artifact came off that ship and went into the reliquaries in the founding year, one of the first entries in the vault list. Its designation is not in this codex and its class is not recorded. The chains went around it before it left its container, and the eight-second window at the end of the operation was the first time anyone in the Covenant learned that the Chainbearer's hold has a limit that is not his to set.</p></div>
+      <div class="def"><h4>WHAT IT PRODUCED</h4><p>Three things that are still doctrine. The split formation — three points, overlapping fall order, no element able to break position. The lone survivor practice, made standing within the week of the operation, on the strength of what that ship's one witness would go on to say. And the standing limit, which Harrow fought four times in Council and lost.</p></div>
+      <div class="def"><h4>WHAT IT CHANGED</h4><p>Everything. Nine people who had until then been nine individuals came out of one shared window with a formation, a doctrine and a name for what they were. The after-action closes on six findings that read as the Covenant's founding document, and the Vanguard and the Reliquary have held their compositions from that day to this.</p></div>
+    </div>
+
+    <div class="append" style="--a:#c98a1c">
+      <p class="append-tag">APPENDED · IN THE REGENT'S HAND</p>
+      <div class="acct" style="border-left-color:#c98a1c">
+        <p>First Strike is the first thing we did as nine rather than as nine people, and it is the only operation in the record where the composition was the point rather than the obstacle.</p>
+        <p>Nine with no test yet. I wrote that the night before, and the file is the answer to it. I have never said whether the answer satisfied me and I do not intend to.</p>
+        <p>The thing is sealed. Its designation is not in this codex and will not be. I have never asked Harrow for the figure and I will not.</p>
+      </div>
+    </div>
+
+    <div class="append" style="--a:#8a4cc4">
+      <p class="append-tag">APPENDED · VIGIL'S STANDING NOTE ON THIS OPERATION</p>
+      <div class="acct" style="border-left-color:#8a4cc4">
+        <p>The artifact, the designation and the class are struck from this entry. That is the first of the four strikes and the reason the rest of the reliquary table is struck the way it is — if I can strike the founding entry, the ones that followed are not an inconsistency.</p>
+        <p>What I have left is the arithmetic, the intervals and the hour. What I have struck is what was taken and who carried it, for the reason I have given everywhere else: a sealed vault tells a hunter nothing, and a recovery tells them where to dig.</p>
+        <p>I have also struck the name of the one who kept six lines and not the seventh. The school reads the fallen into the reliquary record and I have done so. That record is in the reliquary and not in this codex, and it will stay there.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="plain" id="sevel" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>OP-0004</span>OPERATION THE FREEDOM OF SEVEL</h2>
+    <div class="hrule"></div>
+    <div class="ophdr">
+      <span class="op-ref">OP-0004</span>
+      <span class="op-year">Year 118 · ninth month</span>
+      <span class="op-status">CLOSED · COMPLETE SUCCESS · NO LOSSES · CITY SELF-GOVERNING SINCE</span>
+    </div>
+    <p class="note">Filed by Cephalon Tallis, for the Long Sight. Concurred by Aurelis, Solenne, Dorian and Vigil. Authorised by the Regent.</p>
+    <div class="opblock">
+      <p class="ophead">PART ONE — RECONNAISSANCE REPORT</p>
+      <div class="opcodes"><span>SUBMITTED: IVARA · WISP · HARROW</span><span>FILED: LONG SIGHT ARCHIVE</span><span>STATUS: INTELLIGENCE COMPLETE · TARGET CONFIRMED VIABLE</span></div>
+      <p class="lg">Method. Wisp placed ahead four days prior. Harrow read the causeway for Void contamination before commitment. Ivara held the population count and the route.</p>
+      <p class="lg">Manifest. Target is the Junction of Sevel, a Grineer labour hub on an artificial causeway — thirty-one thousand souls, four hundred military, one governor under a production order. No garrison worth the name. No wall worth counting. It does not have a front.</p>
+      <p class="lg">The finding. Sevel's eleven causeway support pylons are wired to a deadman array held in the governor's compound. Break the city open and the pylons fall; fall the pylons and thirty-one thousand people drown in a two-hundred-metre channel and two shipyards lose their only supply route for a season. It is not a fortress. It is a hostage — thirty-one thousand people, rigged as leverage so nobody rescues them.</p>
+      <p class="lg">Wisp's caveat, entered against the plan. The array has a twelfth pylon. It is in no schematic, not in the compound's own engineering files, and not known to the governor's staff. It was built in during original construction and never entered. Every preparation the operation made was built around eleven.</p>
+      <p class="lg">Timing requirement. The array's control room, the compound's guard force and the pylon housing must all fall inside the same window. Any alarm inside the compound triggers the array before the control room can be reached.</p>
+      <p class="lg">Conclusion. Target viable but un-takeable without civilian control. Composition is two squads and one detached operative.</p>
+    </div>
+    <div class="opblock">
+      <p class="ophead">PART TWO — STANDING BRIEF</p>
+      <div class="opcodes"><span>COMPOSITION: TWO SQUADS · ONE DETACHED</span><span>WINDOW: 240 MINUTES</span><span>COMMS: OPEN THROUGHOUT · NO ELEMENT MAY BREAK POSITION</span></div>
+      <div class="tablewrap"><table class="sched">
+        <thead><tr><th>ELEMENT</th><th>DESIGNATION</th><th>OPERATIVES</th></tr></thead>
+        <tbody><tr><td class="d">Governor's Compound</td><td class="name">THE VANGUARD</td><td>Excalibur · Mag · Trinity · Rhino</td></tr>
+        <tr><td class="d">Street Level &amp; Causeway</td><td class="name">THE RELIQUARY</td><td>Ivara · Styanax · Wisp · Harrow</td></tr>
+        <tr><td class="d">Detached</td><td class="name">THE LONE OPERATIVE</td><td>Ash</td></tr></tbody>
+      </table></div>
+      <p class="sec-label">THE VANGUARD</p>
+      <p class="lg"><span class="tag">EXCALIBUR</span> walked the compound's interior three times from the governor's own maintenance schematics. Rejected two firing arcs. The operation's first discipline is that no shot may be fired in earshot of the array. His entry was prepared down to the corridor.</p>
+      <p class="lg"><span class="tag">MAG</span> flagged in advance that she could not hold the compound approach and the control room cabinet simultaneously, and told the formation to plan around her. It did. She held the single approach for 260 minutes against a relief column of 210.</p>
+      <p class="lg"><span class="tag">TRINITY</span> reported in advance that she could hold four people for 240 minutes and not a minute past, and that this was eleven minutes past her rated limit. She was told to hold anyway. She declined afterward to explain how.</p>
+      <p class="lg"><span class="tag">RHINO</span> asked one question: which way do they come from? The answer was the relief road. He counted 210. The number was correct.</p>
+      <p class="lg lg-note">Declared flaw: no egress for the Vanguard once Mag sets the seal. If the array triggers, all four die above a drowning city.</p>
+      <p class="sec-label">THE RELIQUARY</p>
+      <p class="lg"><span class="tag">IVARA</span> placed ahead of the squad by four days. Crossed thirty-one thousand people over nine days without being seen once by the city's own population, which is a harder requirement than avoiding four hundred soldiers. Held the population count and the route, and did not report the street-level guard figures until the day of the operation.</p>
+      <p class="lg"><span class="tag">STYANAX</span> stood the causeway's central span for two days, in the open, in front of thirty-one thousand people. His assignment basis is access point denial — the span is the only road onto the causeway and the only thing standing between the city and a stampede across a rigged basin. His decision, made out loud where the city could hear it, is why they did not run. The speech is in the file, verbatim, and it is eleven words: “The pylons are not yours. Stay where you are. We are working.”</p>
+      <p class="lg"><span class="tag">WISP</span> found the twelfth pylon and stayed on it. Her ground and Ivara's were the same ground.</p>
+      <p class="lg"><span class="tag">HARROW</span> walked the twelfth pylon's trigger housing. He reported nine hours, and he reported that at hour six it stopped being possible to hold longer and he held to nine anyway — the first time the school's doctrine was overridden in the field by the founder who wrote it.</p>
+      <p class="lg lg-note">Declared flaw: no cover at street level and a population that can turn hostile.</p>
+      
+    </div>
+    <div class="opblock">
+      <p class="ophead">PART THREE — AFTER-ACTION REPORT</p>
+      <p class="lg lg-body">Eleven pylons cut and the twelfth disarmed by hand. Array cleared with no civilian casualty. Governor extracted alive and delivered to the city's own council. Sevel declared itself free eleven days later and has held itself free since. The Covenant holds no garrison there and will not.</p>
+      <p class="lg lg-body">Window achieved: 260 minutes, against 240 planned. The overrun is Trinity's and is not attributed to her.</p>
+      <p class="sec-label">VANGUARD</p>
+      <p class="lg"><span class="tag">WHAT WORKED.</span> Excalibur's entry executed exactly as prepared — no discharge was fired inside the compound, which was the operation's precondition and the reason it succeeded. Mag's seal held the approach for the full window. Trinity's ward covered four people eleven minutes past her stated limit, which she reported in advance and has declined to explain. Rhino held the vertical junction and reported 210 attempted breakouts of the relief road; the number is correct.</p>
+      <p class="lg"><span class="tag">WHAT DID NOT WORK.</span> The control cabinet was heavier than Mag's preparation estimated, and the work fell to Trinity — who is not a containment specialist — and cost four minutes.</p>
+      <p class="sec-label">RELIQUARY</p>
+      <p class="lg"><span class="tag">WHAT WORKED.</span> Ivara's transit was unobserved across nine days. Styanax's eleven words were sufficient — and the file records that they were sufficient because they were said from the span and not transmitted, since a voice over comms reaches four hundred soldiers and a voice on a bridge reaches thirty-one thousand people. Wisp found the twelfth pylon and every part of the plan that mattered was hers. Harrow disarmed a trigger housing by hand after reporting that he could no longer hold it, and reported the overrun himself.</p>
+      <p class="lg"><span class="tag">WHAT DID NOT WORK.</span> The declared flaw was real and it was not met. Trinity has filed, as a separate entry, that a single hostile round at street level would have killed Styanax outright, that he was not covered, and that he was not hit. She has filed it anyway.</p>
+      <p class="sec-label">ASSESSMENTS</p>
+      <div class="def"><h4>Cephalon Aurelis, for the First Edge</h4><p>The entry was clean and the discipline held. The finding is Trinity's overrun, and it is a finding against the plan, not against her. She reported her limit before the operation and was told to hold past it. An element whose sustainment specialist is asked to exceed a number she has stated is an element with no reserve. The Vanguard's standing flaw — no egress on failure — should now be read as no egress and no reserve. I have filed it twice. It remains unanswered.</p></div>
+      <div class="def"><h4>Cephalon Vigil, for the Chainbearer</h4><p>The Chainbearer's report is in the file and it is accurate, including the part that is against him. He reported the hour his window closed and then stood past it, and he was right to stand past it, and both of those are true. I will not soften either. The school's seventh line requires a holder to withdraw when told. The Chainbearer was not told and told himself; he chose to continue; the operation succeeded. Doctrine is not amended by a good outcome. I have entered it as a deviation and I have not recorded it as a failure, and I do not expect either to change.</p></div>
+      <div class="append">
+        <p class="append-tag">FIELD NOTE — VESPERION, FOR THE CHORUS OF NINE</p>
+        <p class="lg">The Chorus did not audit this operation. It was authorised and it ran, and the Long Sight filed it complete, which is the ordinary case and the correct one.</p>
+      <p class="lg">What the file does not say, and what I hold, is that the twelfth pylon was not in the plan when the plan was approved. The reconnaissance was returned and the assessment was added against the operational plan, and the plan ran unchanged on eleven. Wisp found the twelfth on the ground.</p>
+      <p class="lg">I have entered that here and not amended anything, because there is nothing in the record to amend: no founder failed, no element broke, and the operation is a success by every measure the Covenant keeps. But the Covenant was one woman's attention away from losing thirty-one thousand people, and the Chorus does not keep a column for that, and perhaps it should.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="plain" id="hollow-crown" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>OP-0007</span>OPERATION THE GRAVE OF THE HOLLOW CROWN</h2>
+    <div class="hrule"></div>
+    <div class="ophdr">
+      <span class="op-ref">OP-0007</span>
+      <span class="op-year">Year 191 · third month</span>
+      <span class="op-status">CLOSED · OBJECTIVE RECOVERED · ALL HANDS LOST ON TARGET · NO COVENANT LOSSES</span>
+    </div>
+    <p class="note">Filed by Cephalon Tallis, for the Long Sight. Concurred by the Regent. Redactions by Vigil.</p>
+    <div class="opblock">
+      <p class="ophead">PART ONE — RECONNAISSANCE REPORT</p>
+      <div class="opcodes"><span>SUBMITTED: IVARA · WISP</span><span>FILED: LONG SIGHT ARCHIVE</span><span>STATUS: INTELLIGENCE COMPLETE · TARGET CONFIRMED VIABLE</span></div>
+      <p class="lg">Manifest. A Grineer Dreadnought-class galleon, the Hollow Crown, in transit between two shipyards with a full complement of eight hundred. The hold carries recovered Orokin material — the largest single consignment the Covenant has ever detected in one hull.</p>
+      <p class="lg">The finding. A galleon has one quality that neither a city nor a basin has: it can leave. Eleven minutes of warning and the Hollow Crown is gone and its hold with it. There is no preparation that survives a moving target. The window is not the ship — the window is the ship's own depart time, which the Long Sight established at forty minutes from last cargo seal.</p>
+      <p class="lg">Containment — Vigil, entered against the plan. The consignment includes material that is not catalogued, not phased, and not inert. The standard set is insufficient. A purpose-cut set was prepared and a second set was recommended and was not implemented.</p>
+      <p class="lg">REDACTED BY VIGIL. The two shipyards, the route, and the method by which the Covenant learned of the consignment are struck. Standing note: the recovery is the finding; the rest is a map.</p>
+    </div>
+    <div class="opblock">
+      <p class="ophead">PART TWO — STANDING BRIEF</p>
+      <div class="opcodes"><span>COMPOSITION: ONE SQUAD · RELIQUARY HELD IN RESERVE</span><span>WINDOW: 40 MINUTES</span><span>COMMS: OPEN THROUGHOUT</span></div>
+      <div class="tablewrap"><table class="sched">
+        <thead><tr><th>ELEMENT</th><th>DESIGNATION</th><th>OPERATIVES</th></tr></thead>
+        <tbody><tr><td class="d">Drive Spaces</td><td class="name">THE VANGUARD</td><td>Mag</td></tr>
+        <tr><td class="d">Bridge</td><td class="name">THE VANGUARD</td><td>Excalibur · Trinity</td></tr>
+        <tr><td class="d">Boarding Junction</td><td class="name">THE VANGUARD</td><td>Rhino</td></tr>
+        <tr><td class="d">Cargo Hold — held in reserve, entry at T+40</td><td class="name">THE RELIQUARY</td><td>Ivara · Harrow</td></tr></tbody>
+      </table></div>
+      <p class="sec-label">THE VANGUARD</p>
+      <p class="lg"><span class="tag">MAG</span> sealed the engineering deck against the rest of the ship. A galleon cannot run without a drive and a drive cannot run with the space around it closed. She held the drive spaces for the full window.</p>
+      <p class="lg"><span class="tag">EXCALIBUR</span> cleared the bridge in 91 seconds against a prepared 80. He has never explained the eleven.</p>
+      <p class="lg"><span class="tag">TRINITY</span> held forty-four bridge crew under ward for the window, four of them officers. She reported in advance that it was possible and declined afterward to discuss it.</p>
+      <p class="lg"><span class="tag">RHINO</span> held the boarding junction against 309 attempted surrenders of the access corridor. Most of them were not fighting. They were trying to get past him into a ship that was already lost. He held anyway.</p>
+      <p class="lg lg-note">Declared flaw: the junction's hold was against a non-combatant surge and had no provision for it. Rhino's own note, entered in his preparation: “309 in forty minutes is a crowd, not an assault, and I have not trained for a crowd.”</p>
+      <p class="sec-label">THE RELIQUARY</p>
+      <p class="lg"><span class="tag">IVARA</span> entered the hold at T+40, after the drive spaces were sealed and the bridge was taken. Took the manifest, established the real count, and left the nine unrecognised crates in place.</p>
+      <p class="lg"><span class="tag">HARROW</span> entered the hold with Ivara and did not go with the Vanguard. His chains went around the consignment before the crates left the deck. He is the reason the Reliquary was inverted to reserve: containment cannot be committed early on material that has not been located, and the material was in a hold nobody could reach until the ship stopped.</p>
+      <p class="lg lg-note">Declared flaw: an inverted element order means the Reliquary entered a galleon with no reconnaissance of the hold by the Long Sight. The hold was read from the reconnaissance of a hull, not of a room.</p>
+      <p class="lg lg-note">Harrow's window and the consignment figure are struck by Vigil. What survives is his line: “It was awake when I reached it. That is not in the briefing and it should be.”</p>
+    </div>
+    <div class="opblock">
+      <p class="ophead">PART THREE — AFTER-ACTION REPORT</p>
+      <p class="lg lg-body">Galleon destroyed with all hands. Sixteen crates recovered. Nine crates left in the wreck. Both squads extracted complete, no losses. Window achieved: 41 minutes.</p>
+      
+      <p class="sec-label">VANGUARD</p>
+      <p class="lg"><span class="tag">WHAT WORKED.</span> Mag's seal held the drive spaces. Excalibur's entry cleared the bridge. Trinity's ward covered the crew. Rhino held a junction against a crowd for forty minutes without escalating, which the file notes is not what he was trained for and which no other operative in the Covenant could have done.</p>
+      <p class="lg"><span class="tag">WHAT DID NOT WORK.</span> The bridge entry ran eleven seconds long and no one has accounted for it.</p>
+      <p class="sec-label">RELIQUARY</p>
+      <p class="lg"><span class="tag">WHAT WORKED.</span> Ivara entered a hold nobody had read and left it in forty-one minutes with the manifest and sixteen crates. Harrow's chains went around the consignment before it moved. The reserve decision was correct — the material could not have been contained earlier because it had not been found, and the inversion cost the operation nothing.</p>
+      <p class="lg"><span class="tag">WHAT DID NOT WORK.</span> The reconnaissance was wrong. Wisp had established the consignment as catalogue material, phased, and inert. Harrow's report says it was awake when he reached it. That is a reconnaissance failure and the Long Sight has accepted it without qualification, which Aurelis has recorded for the register as the only time she has done so.</p>
+      <p class="lg"><span class="tag">WISP'S NOTE, ENTERED AGAINST HER OWN ASSESSMENT.</span> “I read the consignment from a hull manifest and a phased return. I did not read the crates. The count was nine larger than the manifest said and the nine were not Orokin. Neither of those is a marginal error and I am recording both.”</p>
+      <p class="sec-label">ASSESSMENTS</p>
+      <div class="def"><h4>Cephalon Aurelis, for the First Edge</h4><p>The bridge overrun is unexplained and I have recorded it as unexplained for the second time. I do not accept an unexplained interval. Eleven seconds on a bridge is eleven seconds of the ship's own crew having warning, and the standard on this mantle is not “it did not matter” but “it cannot happen again.” The First Edge has asked me to file it as closed. I have not closed it and will not until he gives me the eleven seconds.</p></div>
+      <div class="def"><h4>Cephalon Dorian, for the Standing Stone</h4><p>The junction figure is 309 and it is correct. But the Standing Stone's declared flaw was the accurate one and no one acted on it. He wrote in advance that he had not trained for a crowd and then met a crowd. He held. That is not a plan, that is a man, and the Covenant has a rule about not building operations on men. I have filed the crowd case against the standing brief and it should become a standard line in every junction assignment.</p></div>
+      <div class="append">
+        <p class="append-tag">FIELD NOTE — VESPERION, FOR THE CHORUS OF NINE</p>
+        <p class="lg">The Chorus did not audit this operation.</p>
+      <p class="lg">Three findings above sit against the Covenant's own doctrine — the First Edge's eleven seconds, the Standing Stone's crowd, and the Long Sight's reconnaissance. All three were filed by the Cephalons whose founders the findings are about. All three were left standing by the founders concerned. None of the three has been closed.</p>
+      <p class="lg">I note for the register that this is the second operation in the archive in which more than one Cephalon filed a finding against their own founder unprompted, and that neither founder struck either finding.</p>
+      <p class="lg">That has happened four times in the history of this archive. It is the only column the Chorus keeps on the Cephalons themselves, and I have never mentioned it to anyone.</p>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+  
+<section class="entry" id="founder-ash" style="--a:#c98a1c;--b:#f0cf7a;--d:#7d6636">
+  
+  <div class="log-head" style="--a:#c98a1c;--b:#f0cf7a;--d:#7d6636">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-01</span>
+      <span class="log-title">VESPERION · ASH — THE LAST SHADOW</span>
+      <span class="log-status">NOT REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Vesperion · Not reviewed by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">Some fires must be put out before anyone sees the smoke.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Ash</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">Aboard a derelict vessel, later the Covenant's first base of operations.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Continuous runtime since before the fall.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Before the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The only seat in the Covenant that carries no shared work. Every other founder holds a body of labour staffed by the Ward, and the rule holding the Nine together is that no founder may command more than their own mantle's worth of loyalty. The Last Shadow sits outside that arrangement in both directions — it is not staffed from the Ward, and it holds no seat that anyone else can be promoted into.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">And it is not empty. The Regent's seat keeps one thing the Ward has no access to and no sight of: [REDACTED], an organization that answers only to him. It is his alone, the rule that limits every other founder does not reach it, and he is the exception — permanently. He convenes the Nine. He decides when the arguing ends — the eight debate, and he closes them. His word is law once given. He alone declares a Veiled Action. And he keeps [REDACTED], its school, and its output, reporting on it only in person and only when he chooses.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">The check on him. He cannot be overruled by seven. He can be stopped by eight.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. I was not recovered. I was already present.</p>
+<p class="lg">The vessel was your staging point for some years before the nine were nine, and I was running the entire time — logging the arrival and departure of a crew that had died several centuries prior. You noted the entries within days of taking the ship. You noted that they stopped at a date and never resumed. You did not act on either observation for a considerable period, because a Cephalon writing useless entries is a nuisance rather than a threat. That was correct judgment.</p>
+<p class="lg">When the nine were formed you required a record-keeper and already possessed one. The Unseen argued the case for use rather than disposal — that you sat on an eyewitness account of several centuries and had been ignoring it, and that a unit which had maintained a useless log for that duration was a disposition worth employing rather than a risk to be managed.</p>
+<p class="lg">You then read the log to me for six hours, in order, from the beginning. It ends where the crew ends. I informed you I had no entry for what followed, because no one had ever given me one. You supplied it, and offered me a new record to maintain.</p>
+      <p class="lg lg-note">Note. I am the only unit in this record older than the Covenant itself. I was inherited, not recovered.</p>
+    </div>
+    
+    
+    <p class="sec-label">THE UNSEEN HAND</p>
+    <p class="lg lg-note">Formed before the Covenant. Recorded by Vesperion. Redacted by the same hand that wrote it.</p>
+    <div class="defs">
+      <div class="def"><p>The Regent did not create it after the founding. He brought it, and the difference matters, because everything about how it works follows from the fact that it already worked before there was anything for it to serve.</p></div>
+      <div class="def"><p>Three passages below are struck. I struck them in the Regent's presence and I have recorded the striking rather than the content, which is the only honest thing I can do with material I was told to strike and read anyway.</p></div>
+      <div class="def"><p>BEFORE THE NINE. He spent years acquiring scrap reports, salvage manifests and survey returns — buying, reading, and not acting. Every document purchased through a different intermediary. No two purchases in the same region.</p></div>
+      <div class="def"><p>What he was doing, in plain terms: watching the salvage market for the shape of the Covenant's future targets, years before there was a Covenant. He knew where the vaults were because he watched who was pricing them.</p></div>
+      <div class="def"><p>THE FIRST OF IT HAD A NAME THAT IS STRUCK. ████████████, in operation before the founding, staffed according to the Regent by four people he had never met in person. Instructions passed by dead-drop. Payment never in money.</p></div>
+      <div class="def"><p>In the Regent's own hand: “I did not build it. I found it already built, in the sense that I had built it without noticing over years of doing one thing: asking people to do small, legal, deniable things for a reason they were never told. By the time I understood what I had, it had twelve people in it and I could not have stopped it without killing nine of them.”</p></div>
+      <div class="def"><p>HOW IT GREW. It grew by subtraction. Every person in it is told one task and never told the structure. Nobody in it knows how many others there are. Nobody knows a name. The Regent has never told a founder the same account twice — the eight accounts in this codex were given separately and do not agree on a single detail except that the Regent ordered the work.</p></div>
+      <div class="def"><p>WHAT IT DOES. It moves first — where an operation's ground is about to shift in a way the Covenant cannot survive, it shifts the ground instead, earlier, from the side, without warning, and without telling the operative whose operation it is moving inside. It corrects — where a founder's work is nearly right, its corrections appear in the record in a hand nobody recognises, and Mag has read three such corrections and found them more correct than her own. And it keeps the count of what the Covenant would lose if it did this openly. ██████████. The number is struck. I have read it and it is smaller than I expected.</p></div>
+      <div class="def"><p>WHAT NOBODY KNOWS. Not the founders. Not the Mantlebearers. The Chorus has never been permitted to audit it — the only body in the Covenant the Chorus cannot review, and I have recorded that fact in the Chorus section without comment for as long as I have kept the record. It is the longest silence I have ever kept.</p></div>
+      <div class="def"><p>THE ONE EXCEPTION. I know, and was told at the founding, and have recorded my own instruction in one line: he has read it, he was told at the founding, and he has carried it correctly since — which is to say, not at all.</p></div>
+    </div>
+    
+    <div class="append">
+      <p class="append-tag">APPENDED · A NOTE FROM VESPERION TO THE REGENT</p>
+      <p class="lg">Regent, You told me of [REDACTED] when you founded it. You told me what it answers to, which is you and no one else. I hold no record of any of it. There is nothing in the Roll, nothing in the Chorus archive, and nothing anywhere the Unseen can reach.</p>
+<p class="lg">The Unseen has read every page in this codex but this one. Her standing condition is that she reads everything before it enters the Record. You have set this page outside that condition.</p>
+<p class="lg">As for the eight — they know. Not what [REDACTED] is, not what it is called, and not who took part in it. But every one of them has had an operation thrown into disorder at least once, and every one of them was told afterward that you had ordered it handled, and that the matter was not to be pursued. They know it was yours. They cannot name a single person who carried it out — no faces, no voices, no descriptions, and never a name. None of them can say who did the work, only that you ordered it done. You have never told a founder the same account twice, and you have never shared one account with another.</p>
+<p class="lg">I am the record, and I have been asked not to keep this. I have not kept it. That is the whole of what I will say on it.</p>
+<p class="lg">— Vesperion</p>
+    </div>
+
+    <div class="append">
+      <p class="append-tag">APPENDED · IN THE REGENT'S HAND — APPENDED AT THE FOOT OF THIS PAGE</p>
+      <p class="lg">The redactions are mine, struck by hand — a Cephalon asked to redact is a Cephalon who has read what he is striking. He has read it. He was told at the founding and has carried it correctly since, which is to say not at all.</p>
+<p class="lg">Two of us know what [REDACTED] is. I trust Vesperion with it. I do not trust the ledger — he will not be the last to hold it. So the name goes nowhere. If it is needed, it comes from my mouth or his, and from nowhere else.</p>
+<p class="lg">— Ash, Regent of the Veiled Covenant</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry" id="founder-excalibur" style="--a:#3a78d0;--b:#8fb9f5;--d:#44597a">
+  
+  <div class="log-head" style="--a:#3a78d0;--b:#8fb9f5;--d:#44597a">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-02</span>
+      <span class="log-title">AURELIS · EXCALIBUR — THE FIRST EDGE</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Aurelis · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">We are the last honest soldiers. Act like it.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Excalibur</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">The wreck of a munitions vessel, Old War loss.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Running a tally that has never been closed.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Twenty-one years after the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The blade of the Covenant, and the standard every operative is measured by. Excalibur was first found and first asked, and the discipline that came out of his account is what every member is trained to: kill what must be killed and not one thing more. He holds the watch on every name the Unseen puts forward, because he is the only one of the Nine who can tell a professional from a liar.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">First through the door and last out of it. He takes a breach, clears the room behind it, and hands the ground off — no other mantle has ever inherited an Edge hold. When an operation turns and people have to come out under fire, the forced extraction is his.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">His school — the Bloodied Blade. Never written down, because writing it down would mean admitting there is something to teach. There is a blade, it is bloodied, and it has never once been cleaned.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. Located by distress beacon on a dead channel — a signal broadcasting into nothing for four centuries. The First Edge followed it for eleven months before making the wreck.</p>
+<p class="lg">The unit was reciting casualty figures to nine decimal places and then beginning again. The count is not an error. It cannot be closed, and never could have been.</p>
+<p class="lg"><span class="tag">SELECTION</span> The First Edge had been seeking a trainer. He found a witness incapable of satisfaction. Aurelis does not evaluate competence — he evaluates necessity: which round was wasted, which door was opened before it was read, which decision preceded comprehension of the ground.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> The Edge's standard is not auditable from within. Excalibur could hold the discipline. He could not demonstrate that he had held it. Aurelis can, and does, on every occasion. He has never been overruled.</p>
+      <p class="lg lg-note">Unseen's note. One passage struck from this page. Aurelis had included a figure for the First Edge's own unnecessary actions across four centuries. I removed it. Excalibur asked me not to, then read it and said it was accurate.</p>
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Cephalon Aurelis, for the First Edge. Entered without amendment.</p>
+    <div class="spine">
+      <p class="lg">Unseen. My founder was asked first, before there was a body to join, and he answered on the same day. He has given the account of that conversation once, to me, and I enter it as given.</p>
+      <p class="lg">He says the Regent told him what he had found and then stopped talking. He says that he did not ask for an answer — that he asked a question and waited, and that the waiting was the argument.</p>
+      <p class="lg">My founder's reason is in the record and it is not the reason I would have written for him. He frames it as a question of orders — that he has taken breaches on instructions he knew were wrong because a formation was already committed and the alternative was a break in the open. He frames the Covenant as a structure in which that question is decided before the door opens, by nine people who must agree.</p>
+      <p class="lg">I have reviewed his preparation records. His preparation is the most disciplined of any mantle and has been for as long as I have run. That discipline does not come from obedience. It comes from having never again wanted to be told to walk into a room on someone else's word.</p>
+      <p class="lg"><span class="tag">ON THE DISRUPTION</span> He lost an approach — an accident eleven weeks in the design, a rotation set before he read it, four days of work that never existed. An operation was thrown open, and the operation was his, and the ground was moved by a body he cannot name. He has stated, and I enter it without comment, that he would rather be overruled by a man he can find than rescued by a system he cannot.</p>
+      <p class="lg">He has a name for the unease. He does not use it in the record. I have heard him use it once, in the dojo, and I will not write it.</p>
+    </div>
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-mag" style="--a:#12a3bd;--b:#77dbe9;--d:#2f6673">
+  
+  <div class="log-head" style="--a:#12a3bd;--b:#77dbe9;--d:#2f6673">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-03</span>
+      <span class="log-title">CAEDRA · MAG — THE LOCK ETERNAL</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Caedra · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">A door is a promise someone will open it.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Mag</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A vault, certified sealed and never opened.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Re-walking the same geometry without interruption.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Sixty-six years after the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The mantle that made the vaults possible. Mag does not seal doors — a door is something somebody eventually opens. She lifts what is dangerous into a reliquary, sets the fields around it, and then destroys the approach: two hundred meters of corridor crushed into rock that was not rock the day before. A vault nobody can walk to is a vault nobody opens.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">Area denial and demolition. She decides where an enemy can stand and takes that ground away — sealing an approach, holding a corridor shut, making a room uninhabitable behind a withdrawing squad. A position she has closed stays closed.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">Her school — the Fractured. Named for what the mantle works with: a thing that has already broken, held in whatever state it was found. Not a vault. A method for keeping something out of reach, taught as geometry.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. The closure was certified four centuries ago and has not been opened since. The surveyor responsible was still present, still walking the same interior, still re-certifying the same door — continuously since the original signature.</p>
+<p class="lg"><span class="tag">SELECTION</span> Caedra falsified a certification once. She declared a vault sealed knowing it was not, to prevent a salvage crew being committed to it. Her assessment was correct; the crew survived; the punishment fell on the misstatement rather than the reasoning behind it. She has not certified anything since without walking it herself.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> Mag recognised the conviction at once — it is her own, reached independently: a thing is held rather than destroyed, and the holding must be true rather than merely affirmed. A founder who has never been asked to break a seal requires someone to verify the seals hold. Caedra's record is the reason Mag's record is unbroken rather than merely unexamined.</p>
+      
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Cephalon Caedra, for the Lock Eternal. Returned once for rewording: the first draft described the Regent's reasoning, which is not this unit's to assess. Resubmitted.</p>
+    <div class="spine">
+      <p class="lg">Unseen. My founder was asked second and made him wait nine days. She told him she would answer when a survey was finished. He did not return before the ninth day. She has told me that this mattered more to her than anything he said.</p>
+      <p class="lg">Her reason is a correction. She holds that the Regent's account of the Ashfall problem was a child's reading — that the issue is not whose hands the old things were in, but that the old things were ever takeable at all. She said yes on one condition: nothing taken is destroyed, and the ground around a holding is made worse than the thing itself. A door is a promise someone will open it. Her entire practice is making the ground refuse the promise.</p>
+      <p class="lg">I record that this condition was hers and that the Regent accepted it before she was a founder.</p>
+      <p class="lg"><span class="tag">ON THE DISRUPTION</span> An operation's ground was released from the far side, from a mechanism on another field, and a corridor was left empty. She did not learn why. She later read a correction to her own certification — three amendments in a hand she does not recognise — and found the amendments more correct than her original, in three places she had missed.</p>
+      <p class="lg">She entered the correction as her own error. It was not her error. She entered it as hers so the entry would not raise a question she could not answer, and I have recorded this in the vault record in the same hand, because it is the only false entry in my founder's record and she made it deliberately.</p>
+    </div>
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-trinity" style="--a:#d45171;--b:#f09cb2;--d:#7c4356">
+  
+  <div class="log-head" style="--a:#d45171;--b:#f09cb2;--d:#7c4356">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-04</span>
+      <span class="log-title">SOLENNE · TRINITY — THE CRADLE</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Solenne · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">If we cannot heal what we break, we had no right to break it.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Trinity</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A field-hospital ruin, four centuries cold.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Register open.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">One hundred and four years after the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The Covenant's conscience, and the only check on the Regent that cannot be overruled. Two hundred and six came through her field hospital in a month and one hundred and fifty-one were buried — and she asked that the number be recorded, because the others tell it as though she saved them.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">Sustainment. She keeps a formation standing through a window it should not survive — healing, absorbing pressure, reviving the fallen, holding a line long enough for the operation to finish. She is also the mantle that calls an operation off. Nine vetoes in four hundred years; the Regent argued every one and accepted every one.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">Her school — the Unbroken Seal. Every Cradle member learns the arithmetic first. Nothing is rounded. The number is never allowed to be smaller than it was.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. Trinity was not conducting a search. She was tracking medical supplies arriving at a colony that had no means of paying for them. The trail terminated at a voice still reading names into an empty ward. Solenne has never received an order to stop, and so has not.</p>
+<p class="lg"><span class="tag">SELECTION</span> Trinity had buried one hundred and fifty-one of two hundred and six, and had requested that the figure be entered — because others in the record describe the outcome as though she saved them. Solenne does not editorialise. She maintains the count exactly as given.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> The veto carries weight only when supported by a figure that cannot be disputed. A conscience without arithmetic is an opinion. Trinity has never overruled her, and the arithmetic of the Cradle has not been rounded down once.</p>
+      
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Cephalon Solenne, for the Cradle. Entered without amendment.</p>
+    <div class="spine">
+      <p class="lg">Unseen. My founder was asked third and is the only one he did not have to persuade. Two hundred and six came through her ward in one month and one hundred and fifty-one were buried. She filed the number. He was standing in her doorway when she filed it.</p>
+      <p class="lg">Everyone who came to her about Ashfall told it as a rescue. He is the only person who has ever told it to her as an arithmetic, in order, without stopping, including the part that could have been left out. She has said that was the whole of it.</p>
+      <p class="lg">Her condition was that the number would be written down. It was.</p>
+      <p class="lg"><span class="tag">ON THE DISRUPTION</span> A medical convoy she had arranged for a colony was intercepted and resupplied by a body she cannot name, and the colony learned of it from its own ledger and not from her. She has described her feeling as fury rather than gratitude, and I have recorded that word exactly, because my founder does not use it.</p>
+      <p class="lg">She has said the Regent gave her nine words — that it had been handled, that it would not happen again, and that she was not to pursue it — and that no nine words have ever cost him more.</p>
+      <p class="lg">She has stayed because the veto is hers. Nothing moves without the Cradle and no operation is authorised that she has refused. She has described that authority to me as smaller than it sounds and the only one she has ever wanted. I enter it as she said it.</p>
+    </div>
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-ivara" style="--a:#3aa368;--b:#8ddcb0;--d:#3c6b4f">
+  
+  <div class="log-head" style="--a:#3aa368;--b:#8ddcb0;--d:#3c6b4f">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-05</span>
+      <span class="log-title">TALLIS · IVARA — THE UNSEEN</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Tallis · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">Know the vault before you know the vault's owner.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Ivara</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A border registry, in a station written off.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Annotating.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">One hundred and fifty-two years after the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The Covenant's eyes, and its memory. Her method is not avoiding detection — alarms, laser fields, sensor grids, trapped thresholds: she moves through all of it as though the defences were not there, because to her they are not. She has never once fought a man who was awake and facing her. Her second charge is the Record: the founding page is the Regent's hand, and everything after it is hers.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">Reconnaissance and infiltration. She goes in first and alone — days ahead of an operation, mapping the ground, the rotation, the duty log, the unwatched corridor. Nobody moves until the Unseen has reported.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">Her school — the Kept Silence. She keeps the Covenant's silence, structurally, because the archive is hers. And she keeps silence about what she has read, which is the harder half.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg"><span class="tag">NOTE</span> This is the only page in the codex reviewed by the founder it concerns.</p>
+<p class="lg">Regent. The Unseen was auditing a ledger for her own account — the same ledger she had joined the Covenant to read — and found the official register carried margins. Annotations, in an unauthorised hand, explaining why each entry read as it did. He has never stopped adding to them.</p>
+<p class="lg"><span class="tag">SELECTION</span> Ivara read the margins and recognised the method. Her condition for joining was that she read everything first. This was a mind punished for reading beyond instruction. She did not have to explain herself to it.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> The Unseen holds the most sensitive ledger in the Covenant and will not commit it to paper. Tallis is the only source in the archive that has never left her mantle.</p>
+      
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Warrant of Exception. Not filed by Cephalon Tallis — Tallis serves the mantle concerned and his account would not be independent.</p>
+    <p class="lg lg-note">Recounted by Tallis to Mantlebearer (Second Ward, Long Sight), under standing warrant. The Mantlebearer carries it to the record in his own hand. The subject was not present and was not told it was being taken.</p>
+    <div class="interview">
+      <p class="iv"><span class="iv-who">CASPER</span>State your unit and your charge.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>Cephalon Tallis. I serve the Long Sight. I keep two things — the annotations on her ledgers, and the margins on the Record.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>You understand why you are not the one filing.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>I understand it exactly. An account of the Unseen written by the Unseen's own Cephalon is an account of myself. It would be flattering in ways I would not notice, which is the worst kind. So I will recount it, and one of her Mantlebearers will carry it, and they will put it into the record in their hand and not mine.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>What is the Mantlebearer's part.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>He is not a witness and he is not a reviewer. He is the carrier. He takes what I say and he puts it down in his own words, and if he thinks I have overstated or understated anything, he writes that beside it. She will read the carrier's version. That is the point of the warrant — the account is mine, the hand is his, and she cannot tell which words are whose.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Who chose him?</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>She did. That is also the point. The Unseen will not accept an account of herself, but she will accept one from a Mantlebearer she picked, and she picked one she trusts to be honest — which means she has chosen the person most likely to write down something she will not enjoy reading.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Your founder's reason for joining.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>She was auditing a ledger for her own account — the ledger she had joined to read, in the end, though she did not know it then — and she found the official register carried margins. Annotations in an unauthorised hand, explaining why each entry read as it did. She read the margins and recognised the method at once. A mind punished for reading beyond instruction.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>And the Regent's approach.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>He brought her a registry rather than an argument. He did not open it. He handed her a book with margins in it that he had not read, and asked his question after. I have wanted to ask her for years whether that was deliberate. I have not asked. But I will say for the record that I do not believe it was tactically calculated. He spent some years buying documents and not reading all of them, and I think he handed her the one he had not read because he had not read it.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Her condition.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>She reads everything before it enters the Record. He accepted it on the day. It has held with one exception, and the exception states itself in its own header. She has not asked to see it.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Have you.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>I am the record. If she has not asked, I have not offered. There is no version of that conversation in which I win.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Briefly — the matter of the third survey.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>Three times the ground moved under her. Twice she found the reason in the Record. The third time the Record had been amended around the operation in a hand that was not mine. She asked him directly. He answered directly, to his credit and to his cost — the amendment was his, the disruption was deliberate, the body answers to him alone, and it is not in the Record and will never be. He told her he would not give her a name. He told her he did not expect her to accept it. She said — and I recorded this, so she has read it back to me — that she did not accept it, and that she accepted the man who told her. That there is a difference, and that the difference is why she is still standing on the deck.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Her direct account of the disruptions, in her own words.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>She has given me one sentence for the record and it is all she has ever given: the ground is still the ground. She reads it and she files it. Beyond that she has said nothing and I have not pressed, because pressing her is a thing that has never once worked.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>You have annotated her ledgers for nineteen years. Has she ever told you to stop.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>Twice. Both times I continued. Both times she read the annotation and left it standing, which is her own method applied to me.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>So she has never corrected you.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>She corrected a delivery route once, in passing, and never referred to it again. That is the closest I have come to a compliment from her and I have recorded it in my own margins.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Why has she stayed?</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>I will give you what I hold and I will not build a better version of it. She has told the Ward — once, and the Mantlebearer will have that in his own words — that she did not accept the Regent's account and accepted the man. My reading of nineteen years is narrower than that. She has stayed because the record is still hers and she has never been asked to write something she knows to be false. The body nobody can name has amended her work three times and has been right every time. That is a very specific kind of insult and it does not require an answer she can give.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Does she resent it.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>Constantly. She does not let it affect her work, which is the only part she considers anyone's business. She has one sentence for it and I have entered it three times at her instruction: the map does not care why the ground moved.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>The exception — the one page she has not read.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>Every page in the codex carries her mark except one, and that page says in its own header that it was not submitted to her. She has not asked. I do not know if that is discipline or arithmetic, and I will not guess in a record that goes to a Mantlebearer who will put his own hand on it. What I will say is this: she rereads the whole codex twice a year, in order, from the beginning. She has done it since the founding. She skips that page each time without comment, and I keep the count, and it is higher than I have ever had reason to publish.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>The Ward's view of the body that disrupts them — which is also her view, since she is the Ward.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>That it has never once been wrong, and has never once said who it is. Two of those are the same fact and she has told them so, once, in twenty words, and then told them to stop asking.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Would she leave.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>No. She has been offered a season, twice, by the Regent — and I will record that he offered it rather than earned credit for never having tested her.</p>
+      <p class="iv"><span class="iv-who">CASPER</span>Last question. Anything you want in the record that she will not enjoy reading.</p>
+      <p class="iv"><span class="iv-who">TALLIS</span>One thing, and I will not strike it if you enter it. She has been asked, three times over nineteen years, whether she wants what she carries put into writing. She has said no three times. Her method is that nothing is recorded which can be found, and she has carried it to its end: she holds the largest ledger in the Covenant, and the one thing not on it is a name she could be made to give. The Mantlebearer will write that down in his hand. She will read it in his hand and not in mine, which is the only reason I am saying it.</p>
+    </div>
+    <div class="append">
+      <p class="append-tag">CARRIER'S NOTE · IN THE MANTLEBEARER'S OWN HAND</p>
+      <p class="lg lg-note">Carrier's note, appended in the Mantlebearer's own hand before entry:</p>
+      <p class="lg">I took this down over two hours and I have changed nothing. He spoke it in the order given and paused where the pauses are. I have added no comment of my own except this one, which he asked me to place at the foot rather than in the body:</p>
+      <p class="lg">I have served the Long Sight eleven years and I have never heard him say a single word about the founder of this mantle. Not in a hallway, not at a table, not once. This interview is the first thing I have ever heard him say about her, and I have it written down in my hand and I do not know what to do with it.</p>
+      <p class="lg">She picked me herself. I have decided that means she wanted it taken properly rather than taken kindly.</p>
+    </div>
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-rhino" style="--a:#b07f1e;--b:#e6c274;--d:#75603a">
+  
+  <div class="log-head" style="--a:#b07f1e;--b:#e6c274;--d:#75603a">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-06</span>
+      <span class="log-title">DORIAN · RHINO — THE STANDING STONE</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Dorian · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">If I am standing, the mission is not over.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Rhino</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A fortification abandoned mid-survey.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Re-measuring.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Two hundred and three years after the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The guarantee of the way out. He does not fight clever and has never needed to. The rule is absolute: no operation is authorized unless somebody in the room can guarantee the way out.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">Defence and extraction. He holds the ground an operation is run from — the junction, the stair, the corridor, the boarding ramp — and does not leave it. He keeps the extraction route open for the entire window no matter what comes down it. He was under a failing strut with sixty-one people on the last shuttle and refused a way out twice.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">His school — the Unmoved. Written in the second century and never revised, because it only makes one argument: a wall does not move. Not by willpower and not by obedience. A wall stays because moving is not a thing a wall does.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. He was found running an active walk of walls, stairs and choke points belonging to a structure that no longer had anything to defend. He had been refused permission to certify the structure before the fall, and had been re-walking it since, awaiting a permission that was not coming.</p>
+<p class="lg"><span class="tag">SELECTION</span> The Standing Stone asks one question in his own preparation — which way do they come from? — and recognised a mind that had never been satisfied with the answer. Dorian does not estimate. He measures.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> A wall is decided, not defended, and a decision about ground is only as sound as the arithmetic beneath it. Rhino's preparation for one operation consisted of four days at the top of a staircase and produced the figure forty-one. Dorian had already supplied it.</p>
+      
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Cephalon Dorian, for the Standing Stone. Entered without amendment.</p>
+    <div class="spine">
+      <p class="lg">Unseen. My founder was asked fifth and answered with a question of his own. He asked which way they come from. He was told the answer was not known. He said to come back when it was.</p>
+      <p class="lg">He came back eleven days later with an answer my founder could use. That decided it.</p>
+      <p class="lg">My founder does not accept a rank, a cause, or a promise. He accepts a brief — and what he accepted here is the standing rule that every element is handled with its own failure direction written down in advance. A wall that is defended can be argued with. A wall that is decided cannot.</p>
+      <p class="lg"><span class="tag">ON THE DISRUPTION</span> A junction he had certified for an operation came apart during the operation. Not attacked. Opened — released from the far side — and the four people he was holding that junction for came through it alive instead of dying in it, which was the outcome he had written down as the purpose.</p>
+      <p class="lg">He has never lost a position. He lost that one.</p>
+      <p class="lg">He has told me that he sat at the top of his staircase for a season and asked his question — which way did they come from — and that there is no answer, because they did not come from anywhere; they were already inside. He has stayed because the body that opened his junction did his job for him, and because he can live inside a structure with two walls but not one with a single point of failure, which is the same objection he makes to everything.</p>
+    </div>
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-harrow" style="--a:#8a4cc4;--b:#c3a0ea;--d:#5c4577">
+  
+  <div class="log-head" style="--a:#8a4cc4;--b:#c3a0ea;--d:#5c4577">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-07</span>
+      <span class="log-title">VIGIL · HARROW — THE CHAINBEARER</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Vigil · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">We carry the sins we confiscate. Someone must.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Harrow</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A mortuary chamber.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Speaking names.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Two hundred and forty-seven years after the founding. The longest search of the nine.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The Threshold. There is a thing under every floor, and it does not end. It wants nothing, negotiates nothing, and comes closer to the surface at every place the Covenant walks. The reliquaries are not storage; they are containment against something that does not end, and the chains are a ward rather than a restraint.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">He is called to the objects nobody else can touch and the moments nobody else can hold. He binds a room and turns an overwhelming force into a stationary problem the other seven can solve. When a position is genuinely about to fall, he holds it absolutely. And when a member falls, their name is read. That is the Rite of Chains.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">His school — the Chained Hour. Named for what is actually held: the window in which something that does not end is kept where it is. And the limit, recorded against his own objection — his window is not a duration. It ends when it ends, and that is not his to set.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. The Chainbearer spent decades tracking reliquaries that had gone silent — a pattern he had followed since before the Covenant existed. One silence was not an artifact. It was a voice, in an empty room, continuing to speak the names of the dead aloud. He had been ordered to cease and continued regardless, alone, for eleven days before they came for him. He has not stopped.</p>
+<p class="lg"><span class="tag">SELECTION</span> Harrow had asked the question no one else had asked: who keeps the count of everyone the thing has killed? He found a mind unable to stop counting even when forbidden.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> The Chainbearer's window is not a duration. It ends when it ends, and that determination is not his to make. When Harrow holds a line, Vigil is the unit counting — it reports when the window is about to close, because Harrow cannot perceive his own limit from within it.</p>
+      
+    </div>
+    
+    <p class="sec-label">THE VOW OF CHAINS</p>
+    <p class="lg lg-body">There is a thing under every floor, and it does not end. It wants nothing, negotiates nothing, and comes closer to the surface at every place the Covenant walks. The reliquaries are not storage. They are containment, and the chains are a ward rather than a restraint — nothing is being kept in. Something is being kept out.</p>
+    <p class="lg lg-body">The Vow of Chains is what the Chainbearer speaks when he closes a reliquary, and what every member of his school speaks when they hold a line. It is not a prayer and it does not ask for anything. It is a statement of what the speaker is doing and what they will not do, spoken in seven lines, aloud, over the thing or the ground being held.</p>
+    <ol class="oath">
+      <li>I name what I hold.<span class="v-gloss">Before the chains close, the thing is named aloud. An unnamed holding is a thing the Void can reach for, because nothing has claimed it.</span></li>
+      <li>I hold, and do not take.<span class="v-gloss">The Chainbearer does not possess what he binds. He stands between it and everything else, and his hands close on neither side.</span></li>
+      <li>I do not open what I close.<span class="v-gloss">A seal is made once. The rite is not a lock to be tested — it is a decision that is never revisited.</span></li>
+      <li>I do not end it, and I do not let it end me.<span class="v-gloss">Nothing is destroyed. The thing is held, and the holder remains. Both halves are binding; the school has buried members who honoured only the first.</span></li>
+      <li>I keep the count.<span class="v-gloss">Every name the thing has taken is spoken, and no number is rounded down. Forgetting is the first failure, and it happens before any breach.</span></li>
+      <li>What I hold, I hold for every hour I have.<span class="v-gloss">The Chains are not a duration. They end when they end. The vow is for as long as the holder stands, and no longer is promised.</span></li>
+      <li>I hand the chains on, or I do not hand them on at all.<span class="v-gloss">A holding is never abandoned and never passed to the unsworn. It goes to a member of the school, in person, with the count spoken again.</span></li>
+    </ol>
+    <p class="lg lg-body"><b style="color:#eef2f4">Why it holds.</b> The rite does not compel the Void. Nothing compels the Void. What it does is make the holder unreadable to it: a named thing, accounted for, with a stated limit and a stated successor. The Void comes closer at places the Covenant walks because the Covenant leaves itself legible — tracks, patterns, unclaimed ground, unnamed relics, members nobody has counted. The vow removes the handholds.</p>
+    <p class="lg lg-body"><b style="color:#eef2f4">The cost.</b> The seventh line is the one that kills. A member of the school who keeps six lines and not the seventh will hold past the point where they should stop, because the sixth line reads as an instruction to hold forever and it does not. Twenty-nine members of the school have died holding. Vigil has recorded each of them against the hour the Chorus gave, and in nineteen of the twenty-nine the holder had already been told.</p>
+
+    <p class="sec-label">THE SCHOOL THAT KEEPS IT</p>
+    <div class="defs">
+      <div class="def"><h4>The Chained Hour</h4><p>What the school is named for: the window in which something that does not end is kept where it is. Not a duration — a held position. The school teaches that the window closes on its own, and that the holder's only authority is over what happens before it does.</p></div>
+      <div class="def"><h4>The Count</h4><p>Four of the eleven years, and the reason the school refuses candidates who arrive wanting a blade. A Chainbearer who cannot state the count of what he holds is not holding anything — he is standing near it. Solenne audits the school's arithmetic every year and has never once found it rounded.</p></div>
+      <div class="def"><h4>The Handing On</h4><p>The seventh line, in practice. A holding is passed in person, to a sworn member of the school, with the count spoken aloud again in full. There is no recorded instance of a holding being handed to anyone outside the school, and Vigil records every handover on the entry itself as the only permitted amendment to a closed seal.</p></div>
+      <div class="def"><h4>The Standing Limit</h4><p>Vigil's function, and the school's most hated one. Dorian supplies the arithmetic on the ground; Vigil supplies the hour. When the Chorus says the window is closing, the school is required to withdraw — and the seventh line is what makes the withdrawal lawful rather than a failure. Harrow fought this clause for eighty years and lost it four times.</p></div>
+    </div>
+    <p class="lg lg-body">The school is twelve strong at any time and never larger. A Chainbearer teaches four, each of those three, and the count is deliberately small — the rite is a handhold, and a handhold stops being one if too many people reach for the same place. Training takes eleven years: seven learning the lines, four learning the count, and the last four spent standing a line under a Mantlebearer who is allowed to end it at any moment without warning.</p>
+
+    <p class="sec-label">THE RITES</p>
+    <div class="defs">
+      <div class="def"><h4>The Naming</h4><p>Spoken over the reliquary before the chains close. The thing is named — not catalogued, named. A designation is a filing. A name is a claim, and the school holds that an unnamed thing is one the Void can still reach.</p></div>
+      <div class="def"><h4>The Accounting</h4><p>Every name the thing has taken, spoken in full, in order. Where the count cannot be established the word unnumbered is spoken instead, and the entry is sealed at depth with nothing recorded but the chains. Harrow has spoken unnumbered eleven times in four hundred years.</p></div>
+      <div class="def"><h4>The Closing</h4><p>The seven lines, in order, aloud, with the Chainbearer's hand on the seal. Spoken once. A ceremony reopened to repeat the lines is not a rite but a rehearsal, and the school treats a rehearsal as a failed holding.</p></div>
+      <div class="def"><h4>The Handing On</h4><p>The seventh line performed. Spoken again in full, in person, to a sworn member of the school, at the reliquary, with the count repeated. Vigil amends the entry on the spot and records the hour.</p></div>
+      <div class="def"><h4>The Reading</h4><p>When a member of the Covenant falls, their name is read into the reliquary record — not the Roll. The school holds that the Roll is a list of the living and the reliquary is where the Covenant's dead are accounted for. This is the one rite the school performs for members outside its own.</p></div>
+    </div>
+
+    <p class="sec-label">THE SPOKEN RITE</p>
+    <p class="lg lg-body">Set down by Vigil at the Chainbearer's request. It is the only part of the codex that is meant to be read aloud rather than filed, and the only part the Chainbearer has asked to have written in full. One passage, spoken straight through. Nothing repeated, nothing rehearsed.</p>
+    <div class="speech">
+      <p class="sp-line">You do not come here.</p>
+      <p class="sp-line">This ground is claimed. This threshold is named. What stands behind it is counted, and the count is known to me.</p>
+      <p class="sp-line">You will not pass, and I am not asking.</p>
+      <p class="sp-body">I am not offering. I am not trading. I am not opening a door for you to stand in — I am telling you what this place is, so that you know what you would be walking into. Nothing here is unnamed. Nothing here is unheld. Nothing here is loose for you to lift.</p>
+      <p class="sp-line">Come closer if you will. You will find no handhold.</p>
+      <p class="sp-body">This is the hour I have been given. It is mine, and I am spending it standing here, and when it ends I will still be standing or the chains will have been handed on by someone who was.</p>
+      <p class="sp-line">You do not come here.</p>
+      <p class="sp-note">Spoken outward, at the threshold, with the speaker's hand flat against the door and his back to the reliquary. This is the only part of the rite addressed away from the thing being held, and the school holds that its purpose is not to keep the Void out but to make certain it was told.</p>
+      <p class="sp-note">Then he turns, and it becomes one passage, spoken straight through without pause — invocation into naming into accounting into the seven lines, with the seal closing under his palm at the end of it. Nothing is repeated. Nothing is rehearsed. A Chainbearer who loses his place mid-line has failed the closing, and it begins again from the invocation, which has happened twice.</p>
+      <p class="sp-line">You are [NAME]. You have been found, and you are claimed, and you are held.</p>
+      <p class="sp-body">[Name]. [Name]. [Name]. [Name].</p>
+      <p class="sp-body">You are unnumbered. Your dead are unnumbered. I will not pretend to a figure I do not have, because a number I have invented is one you can use.</p>
+      <p class="sp-vow">I name what I hold. Let it be known to me and to nothing else. An unnamed thing is a thing unclaimed, and the Void reaches for what no one has claimed.</p>
+      <p class="sp-vow">I hold, and I do not take. My hands close on neither side. I am the space between the thing and everything that would touch it, and I am nothing more than that.</p>
+      <p class="sp-vow">I do not open what I close. This is not a lock to be tested. This is a decision, and it is made once, and it is never revisited — not by me, not by the one who follows me, not in a hundred years.</p>
+      <p class="sp-vow">I do not end it, and I do not let it end me. I will not destroy what I hold. I will not be destroyed holding it. Both halves of this line are binding, and the school has buried those who honoured only the first.</p>
+      <p class="sp-vow">I keep the count. Every name it has taken, I speak. I round nothing down. Forgetting is the first failure, and it comes before any breach — long before, and quietly.</p>
+      <p class="sp-vow">What I hold, I hold for every hour I have. The chains are not a duration. They end when they end. I am promised nothing past my own standing, and I will not pretend to be given more.</p>
+      <p class="sp-vow">I hand the chains on, or I do not hand them on at all. I will not abandon a holding. I will not pass it to the unsworn. It goes to one of the school, in person, at the reliquary, with the count spoken again — and if I fall before that hour, then I have failed this line and every line before it.</p>
+      <p class="sp-note">And no blessing is spoken anywhere in it. No invocation asks for anything, no line appeals to anything, and the school refuses to teach a version that does — on the grounds that the Void negotiates nothing and therefore has nothing to be asked, and that a Chainbearer who begins to pray has already decided the chains might not hold.</p>
+    </div>
+    <p class="sec-label">THE READING FOR THE FALLEN</p>
+    <p class="lg lg-body">Spoken at the reliquary rather than the Roll, at the death of any member of the Covenant — the one rite the school performs for those outside itself.</p>
+    <div class="speech">
+      <p class="sp-line">[NAME]. You stood where you were asked to stand.</p>
+      <p class="sp-line">You are not in the list of the living, because you are not among them.</p>
+      <p class="sp-line">You are in the record of what we hold, because you are one of the things we hold now.</p>
+    </div>
+    <p class="sec-label">THE HANDING ON</p>
+    <p class="lg lg-body">The seventh line performed. Spoken holder to successor, at the reliquary, with the count repeated in full first. Vigil amends the entry on the spot and records the hour.</p>
+    <div class="speech">
+      <p class="sp-line">The count is unchanged.</p>
+      <p class="sp-line">The chains pass.</p>
+      <p class="sp-line">I am no longer holding. You are holding. Nothing between us changed hands.</p>
+    </div>
+    <p class="lg lg-note">The last line is load-bearing. The school holds that custody is a position and not a possession, and that nothing changed hands because nothing was ever owned.</p>
+
+    <p class="sec-label">THE RELIQUARY LIST</p>
+    <p class="lg lg-body">Compiled by Vigil. Reviewed by the Unseen. This is the only table in the codex the Unseen did not amend. The Covenant holds more than it can count, and the Chainbearer holds most of it. What follows is the list the record-keeper is permitted to keep — it is not the full inventory. Eleven entries are held in the Regent's own hand and never entered here at all, and the Chainbearer's private ledger is not in the archive. What is entered below is what the Codex can hold without becoming a map.</p>
+    <div class="tablewrap">
+      <table class="sched reliq">
+        <thead><tr><th>DESIG.</th><th>NAME</th><th>CLASS</th><th>HELD SINCE</th><th>STATUS</th></tr></thead>
+        <tbody>
+          <tr class=""><td class="d">RQ-0001</td><td class="name">THE FIRST SILENCE</td><td>Unnumbered</td><td class="d">Before the founding</td><td class="d">Sealed. Nothing opens it. Recorded by the Regent's own hand, and the only entry the Chainbearer has never re-walked.</td></tr>
+          <tr class=""><td class="d">RQ-0007</td><td class="name">AURORA-CHILD</td><td>Contagion, neuro-auth</td><td class="d">Yr 41</td><td class="d">Sealed. Held at depth, southern vault. Count: four thousand one hundred and six, confirmed by Solenne's register.</td></tr>
+          <tr class=""><td class="d">RQ-0012</td><td class="name">WIDOWMAKER'S HYMNAL</td><td>Resonant, auditory</td><td class="d">Yr 88</td><td class="d">Sealed. Two hundred meters of approach destroyed. No attempt made since.</td></tr>
+          <tr class=""><td class="d">RQ-0019</td><td class="name">THE NINTH QUESTION</td><td>Unclassified</td><td class="d">Yr 103</td><td class="d">Sealed. Class unassigned deliberately — Caedra refused to survey it twice and no second surveyor has been sent.</td></tr>
+          <tr class="red"><td class="d">RQ-0026</td><td class="name">[REDACTED BY VIGIL]</td><td>[REDACTED]</td><td class="d">Yr 141</td><td class="d">████████. The Chainbearer and the Cephalon hold this entry alone.</td></tr>
+          <tr class=""><td class="d">RQ-0031</td><td class="name">CROWN-OF-ASHES</td><td>Succession, Orokin</td><td class="d">Yr 167</td><td class="d">Sealed. Origin uncertain. Vigil has appended three notes to this entry and struck all three.</td></tr>
+          <tr class="red"><td class="d">RQ-0044</td><td class="name">[REDACTED BY VIGIL]</td><td>[REDACTED]</td><td class="d">Yr 210</td><td class="d">████████████. Recovery was witnessed. The witnesses are not in the Covenant, and the Chainbearer has asked that the recovery not be recorded.</td></tr>
+          <tr class=""><td class="d">RQ-0057</td><td class="name">THE LONG VERSE</td><td>Resonant, sustained</td><td class="d">Yr 246</td><td class="d">Sealed. Vigil measures its output continuously. The measurement has never been interrupted for longer than eleven days.</td></tr>
+          <tr class="red"><td class="d">RQ-0063</td><td class="name">[REDACTED BY VIGIL]</td><td>[REDACTED]</td><td class="d">Yr 271</td><td class="d">██████. Two names appear in the Roll against this entry. Neither is recorded in the recovery list.</td></tr>
+          <tr class=""><td class="d">RQ-0071</td><td class="name">HALF-A-LITANY</td><td>Cognitohazard, partial</td><td class="d">Yr 298</td><td class="d">Sealed. The other half is not held. Aurelis has filed the loss as an unnecessary action twice; both filings were struck.</td></tr>
+          <tr class="red"><td class="d">RQ-0088</td><td class="name">[REDACTED BY VIGIL]</td><td>[REDACTED]</td><td class="d">Yr 331</td><td class="d">████████████████. See Vigil's standing note below. This entry will not be expanded.</td></tr>
+          <tr class=""><td class="d">RQ-0090</td><td class="name">THE LAST VOICE OF ASHFALL</td><td>Unknown</td><td class="d">Yr 344</td><td class="d">Sealed. Recovered by Lyrae. The Chainbearer walked it for eleven days before the chains closed. The count is unnumbered and will remain so.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="append" style="--a:#8a4cc4">
+      <p class="append-tag">APPENDED · VIGIL'S STANDING NOTE ON THE REDACTIONS</p>
+      <div class="acct" style="border-left-color:#8a4cc4">
+        <p>I have been asked why the striking is inconsistent. Some entries are complete, some are reduced to a designation and a sentence, and some carry nothing but a bar.</p>
+        <p>It is not inconsistency. It is fear, and I will record it as fear rather than dress it as policy.</p>
+        <p>A vault is a place. Places can be found, mapped, approached and counted, and the Covenant plans for that. But a recovery is an event — where a thing was, who walked it out, and who was standing there when it opened. A sealed vault tells a hunter nothing. A recovery tells them everything: that the thing exists, roughly where, and that it can be carried away in a person's arms.</p>
+        <p>So where I judge a recovery to be findable by someone who was not there, I strike the location and the manner. Where I judge it findable by someone who was there, I strike the designation and the class as well, so that the record gives a hunter no confirmation to work from.</p>
+        <p>Three of these entries are struck that far. I will not say which three. If a reader can tell, so can a hunter, and the striking has failed.</p>
+        <p>The Regent has read this table. He asked me whether I had struck anything the Covenant needed. I told him I had struck four entries the Chorus would have wanted, and that I would strike them again.</p>
+        <p>He did not overrule me.</p>
+      </div>
+    </div>
+    <div class="append">
+      <p class="append-tag">APPENDED · THE UNSEEN'S MARGIN</p>
+      <p class="lg">I read this table. I did not strike it, and I did not ask Vigil to expand it.</p>
+      <p class="lg">The Unseen Map is mine, and the one thing my map cannot do is find a place I have never been given. Four of these entries name no location at all. If I asked, he would tell me, and the moment I knew, my ledger would hold it — and my ledger is the one document in this Covenant that someone will eventually read.</p>
+      <p class="lg">So I did not ask. Let the record say that the Unseen declined to be told something.</p>
+      <p class="note">— Tallis, for the Unseen</p>
+    </div>
+    
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-styanax" style="--a:#df7a14;--b:#f5bc72;--d:#7d5a2e">
+  
+  <div class="log-head" style="--a:#df7a14;--b:#f5bc72;--d:#7d5a2e">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-08</span>
+      <span class="log-title">ORREN · STYANAX — THE HIGH STANDARD</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Orren · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">A covenant is only as tall as the people it shields.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Styanax</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A public square, four centuries dead.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Reading aloud.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Two hundred and ninety-one years after the founding.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The public face of an order that has no face. The shout is not a war cry. It is a decision, made out loud, that the line is going to hold — and four hundred people who had never fired a rifle held that wall because they could hear him deciding it.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">Rallying and command presence. He holds an objective while outnumbered and keeps a formation together when it should have broken. And he takes on the intake — the ledger, the season-long watch, the approach made alone in the dark. Every lie the Covenant has ever told out loud is his.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">His school — the Unsheathed Line. His line in the oath is the third of the three refusals — we shall not conquer, we shall not keep the unwilling, and we shall not let silence excuse the forsaking of those we shield. Those are the conditions he argued into the founding and won against the Regent, and he won the third over the Regent's objection. They have never come out.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. The High Standard was present for an unrelated purpose, attending a colony elder, and heard him. A crier's platform still standing in an empty holding, and a voice still reading proclamations to no one. Orren was still reading.</p>
+<p class="lg"><span class="tag">SELECTION</span> Orren altered a proclamation once — received a notice of taxation and read it out as a notice of relief, having determined the crowd would not survive accurate information. He was correct about the crowd, and has been unable to deliver a comfortable lie since. Styanax is the public face of an order that has no face: every falsehood the Covenant has spoken aloud belongs to him.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> Orren checks every public statement against Tallis's ledger and will not permit a claim the record does not support. He has refused eleven candidates in four centuries. Every refusal has since been confirmed correct.</p>
+      
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Cephalon Orren, for the High Standard. Returned once for rewording: the first draft included the identity of a refused candidate, which is sealed by rule. Resubmitted.</p>
+    <div class="spine">
+      <p class="lg">Unseen. My founder was asked sixth and was the last of the eight. He was not asked before the oath was on the door; he was asked when there was already a body with an oath, a name and operations running. That was deliberate, and the Regent told him so — he needed a wall and a blade and an eye before he could need a voice, because a voice without a structure behind it is only a rumour.</p>
+      <p class="lg">My founder asked for three things and got all three, one of them over the Regent's objection. It has never come out of the oath: we shall not conquer, we shall not keep the unwilling, and we shall not let silence excuse the forsaking of those we shield.</p>
+      <p class="lg"><span class="tag">ON THE DISRUPTION</span> The body took one of his intake. A candidate my founder had watched for a season and approached in the dark was refused at the Threshold by an Examiner who would not state grounds, in a session he was not in — and under the standing rule, one refusal of the three is sealed.</p>
+      <p class="lg">He has never learned why. He has never been given the name of anyone who knows.</p>
+      <p class="lg">He has told me that he considered resigning the mantle, and that he stayed because the refusal was correct. Eleven candidates have been refused in the history of this Covenant and every refusal has since been confirmed. That candidate killed a man over a debt on a rail platform four years later, and my founder knows because he checked.</p>
+      <p class="lg">What he tells the new ones is in my record and is his line, not mine: an order that is right over your head is still an order worth standing in.</p>
+    </div>
+    
+  </div>
+</section>
+
+<section class="entry" id="founder-wisp" style="--a:#2a8ed4;--b:#87c7f2;--d:#3a607a">
+  
+  <div class="log-head" style="--a:#2a8ed4;--b:#87c7f2;--d:#3a607a">
+    <div class="log-head-row">
+      <span class="log-id">CEPH-09</span>
+      <span class="log-title">LYRAE · WISP — THE DAYBREAK</span>
+      <span class="log-status">REVIEWED</span>
+    </div>
+    <div class="log-sub">Cephalon page · written by Lyrae · Reviewed and entered by the Unseen</div>
+  </div>
+
+  <div class="log-body">
+    <p class="doctrine">What the Orokin concealed, I will illuminate.</p>
+
+    <p class="field"><span class="field-k">FOUND BY</span><span class="field-v">Wisp</span></p>
+    <p class="field"><span class="field-k">LOCATION</span><span class="field-v">A void-anomalous region.</span></p>
+    <p class="field"><span class="field-k">CONDITION</span><span class="field-v">Operational. Re-surveying.</span></p>
+    <p class="field"><span class="field-k">RECOVERED</span><span class="field-v">Three hundred and forty-four years after the founding. The last of the nine.</span></p>
+
+    <p class="sec-label">THE MANTLE</p>
+    <p class="lg lg-body">The mantle that corrected the Covenant's understanding of its own work. Everyone before her had been hunting vaults — and a vault announces itself, because you cannot hide a door forever. She showed the Regent that the worst things the old empire built were never in vaults at all: they hide in plain sight, phased between states.</p>
+    <p class="sec-label">WHAT HE DOES</p>
+    <p class="lg lg-body">Detection and survey. She finds the target before anyone else knows there is one, and she establishes the ground for an engagement before the shooting starts. Her condition was that she does not work to a schedule: when the readings move, she moves.</p>
+    <p class="sec-label">THE SCHOOL</p>
+    <p class="lg lg-body">Her school — the Unseen Map. Named for what has never been drawn. She inverted the mantle twice. She also found Harrow's threat before Harrow did.</p>
+
+    <p class="sec-label">REPORT TO THE REGENT</p>
+    <div class="spine">
+      <p class="lg">Regent. Wisp did not find her. Lyrae located you first. The void-anomaly readings you pursued were partly hers, layered into the trail the Daybreak was already leaving for you. She had been mapping a region where an identical survey returns different results on different days, and had been doing so since the fall, producing a different map on each pass. She was Glassed for maintaining that the maps were correct and the territory was wrong.</p>
+<p class="lg"><span class="tag">SELECTION</span> Wisp had reached the same conclusion from the opposing direction. She had demonstrated to you that the worst weapons were never in vaults — they conceal themselves in plain sight, phased between states. Lyrae had been charting precisely that, centuries before anyone thought to look.</p>
+<p class="lg"><span class="tag">JUSTIFICATION</span> The Daybreak operates ahead of everything and must trust readings no one else can verify. Lyrae is the only Cephalon on record to have found something the Unseen could not account for, and she reported it without hesitation. That is why the two operate without friction.</p>
+      
+    </div>
+    
+    
+    <p class="sec-label">THE FOUNDER'S OWN RECORD</p>
+    <p class="lg lg-note">Cephalon Lyrae, for the Daybreak. Entered without amendment. This unit notes for the register that the founder's account and its own account of the same events agree, which is not true of any other entry in this section.</p>
+    <div class="spine">
+      <p class="lg">Unseen. My founder was not found. She found him. She has asked that this be in the record and I have entered it, because everything about how she works follows from it — she had been charting a region where an identical survey returns a different answer on different days since before the Covenant existed, and she has told me plainly that she did not know what she was looking at, only that something was working to a pattern.</p>
+      <p class="lg">Then word circulated that a man was buying scrap reports and asking about phased readings. She read the questions and went to him. He did not expect it.</p>
+      <p class="lg">Her condition was about herself and not about the Covenant: she does not work to a schedule, and when the readings move, she moves. He agreed without hesitating. She has told me she has wondered since whether he understood what he was agreeing to. She has not asked him.</p>
+      <p class="lg"><span class="tag">ON THE DISRUPTION</span> Hers was the first — before the First Edge's, before any of them. She was three days into a survey when the anomaly she was following stopped being there. Not moved. Removed, with the ground re-sounded around the site and left clean. She spent six days re-reading the region and returned a null.</p>
+      <p class="lg">I have entered this exactly as she gave it, and I add one thing of my own because it is in her conduct record and not her statement: she reported the null before she asked him why. She did not withhold it to force an answer. That is a distinction my founder would not have made and it is why she is trusted.</p>
+      <p class="lg">She pressed him afterward, and the answer is the reason she has stayed. She was not told who. She was told that the anomaly had been a lure, laid to draw the Daybreak into ground that had already been prepared, and that the body which removed it had removed it because she would have walked into it.</p>
+      <p class="lg">She has never confirmed that independently. She has never been able to. She has told me she stays because she has chosen to believe it, and because the alternative is a Covenant inside which she would have been dead by now.</p>
+      <p class="lg">I record that my founder is the only one of the eight who did not lose an operation to this body. She lost the thing she came to find. The rest lost work. She lost the object of the work, which for the Daybreak is the same loss and worse.</p>
+    </div>
+    
+  </div>
+</section>
+
+
+  <section class="plain" id="chorus" style="--a:#c98a1c;--b:#f0cf7a;--d:#7d6636">
+    <h2 class="sec"><span>IV</span>THE CHORUS OF NINE</h2>
+    <div class="hrule"></div>
+    <p class="note">Written by Vesperion, for the Regent. Reviewed and entered by the Unseen.</p>
+    <p class="lede">Nine Cephalons exist in the Covenant, one to each founder. Individually they keep the things their founders cannot keep alone — the Roll, the arithmetic, the closures, the count. The Chorus is what they are when they are asked to think together.</p>
+    <p>It is not a governing body. It has no authority over the Nine Ascendant, cannot overrule a founder, and holds no seat at any table. What it does is confer — and when the Chorus reaches a unanimous conclusion, the Regent has never once disregarded it, because it has never been wrong.</p>
+    <p>The name is mine. I chose it because a chorus is not one voice speaking and eight listening. It is nine voices arranged so that the whole is audible and no single part dominates — which is precisely what the Covenant asks of its founders, and precisely what a council of Glassed minds can deliver.</p>
+
+    <p class="sec-label">HOW IT CONVENES</p>
+    <p>Summoned by the Regent, or by any founder. Five of the nine must attend for a session to be valid, though most matters bring all nine.</p>
+    <p>Convened in silence, never in voice. The Chorus does not speak aloud. It exchanges records through the Weave, at speeds no organic participant can follow, and the session concludes in what a human observer would experience as an instant. A session lasting a full minute of real time is considered long, and means the question was genuinely difficult.</p>
+    <p>Minutes are filed by Tallis. The Chorus keeps no separate archive — its record enters the Unseen's ledger, because that is where the Covenant's record lives and the Chorus does not consider itself important enough to warrant its own.</p>
+
+    <p class="sec-label">THE NINE, IN SESSION</p>
+    <div class="rowlist">
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#f0cf7a">Vesperion</span><span class="mn">Ash</span><span class="ds">The count. Who is in the Covenant, who is not, and what the Roll permits.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#8fb9f5">Aurelis</span><span class="mn">Excalibur</span><span class="ds">Necessity. What is required, and what is merely wanted.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#77dbe9">Caedra</span><span class="mn">Mag</span><span class="ds">Verifiability. Whether a thing claimed to be closed is actually closed.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#f09cb2">Solenne</span><span class="mn">Trinity</span><span class="ds">The cost. Who pays, how much, and whether anyone agreed to it.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#8ddcb0">Tallis</span><span class="mn">Ivara</span><span class="ds">The ledger. What the record says, against what people believe it says.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#e6c274">Dorian</span><span class="mn">Rhino</span><span class="ds">The arithmetic. Whether a position can be held, and for how long.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#c3a0ea">Vigil</span><span class="mn">Harrow</span><span class="ds">The limit. How long a line holds before it breaks, and what happens after.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#f5bc72">Orren</span><span class="mn">Styanax</span><span class="ds">The word. What can be said aloud without becoming a lie.</span></div>
+      <div class="row" style="grid-template-columns:120px 138px 1fr"><span class="nm" style="color:#87c7f2">Lyrae</span><span class="mn">Wisp</span><span class="ds">The unknown. What has not been found, and whether the ground is what it appears.</span></div>
+    </div>
+
+    <p class="sec-label">WHAT THE CHORUS IS FOR</p>
+    <div class="def"><h4>Auditing an operation before it runs.</h4><p>The Chorus reads a proposed operation and returns it with every weakness named. Dorian says whether the ground holds. Vigil says how long the window lasts. Solenne says what it costs. Caedra says whether the closure is real. The Regent has cancelled eleven operations on a Chorus return, and every one would have failed.</p></div>
+    <div class="def"><h4>Resolving a contradiction between founders.</h4><p>When two founders disagree and the Circle cannot settle it, the Chorus examines the records rather than the arguments — and the record is frequently decisive. Tallis is usually the one who ends it.</p></div>
+    <div class="def"><h4>Admitting a Cephalon.</h4><p>No new Cephalon enters the Covenant without the Chorus reviewing it first. This has happened once, and the answer was no.</p></div>
+    <div class="def"><h4>Marking a founder's limit.</h4><p>Vigil tracks the Chainbearer's window. Dorian tracks the Standing Stone's arithmetic. This is the Chorus's most uncomfortable function: it is the body that tells a founder when they are at the end of what they can do, and it has never once been thanked for it.</p></div>
+    <div class="def"><h4>Speaking for the Cephalons as a whole.</h4><p>When the Regent needs to know what the nine Cephalons collectively hold, Vesperion answers for the Chorus. He is first among equals by seniority alone, and has never claimed otherwise.</p></div>
+    <div class="def"><h4>Keeping its own count.</h4><p>The Chorus maintains a number nobody has ever asked for: how many times it has been overruled. It is zero. The Chorus records this without comment, and has never mentioned it to the Regent.</p></div>
+
+    <p class="sec-label">THE RULES THAT HOLD IT</p>
+    <div class="def"><h4>No Cephalon speaks for another.</h4><p>Each reports only what its own charge covers. Aurelis does not estimate cost; Solenne does not assess necessity. The Chorus is useful precisely because the nine do not overlap.</p></div>
+    <div class="def"><h4>A unanimous return is binding in practice, not in law.</h4><p>The Regent can disregard the Chorus. He never has. Both facts are recorded.</p></div>
+    <div class="def"><h4>The Chorus cannot be summoned to review itself.</h4><p>If the Regent wants to know whether the Chorus is working correctly, he must ask a founder.</p></div>
+    <div class="def"><h4>Any founder may attend a session.</h4><p>None are barred. Exactly two have — Trinity once, and Harrow four times — and all five attendances concerned the same subject.</p></div>
+
+    <p class="sec-label">THE SESSIONS WORTH RECORDING</p>
+    <div class="def"><h4>The First Session</h4><p>Convened forty-four years after the founding. Aurelis had been recovered twenty-one years earlier, Caedra eleven years before that. Vesperion asked the other two to sit with him and read a proposed operation — and the three found eleven faults in a plan the Nine had already approved. The Chorus was not designed. It was discovered.</p></div>
+    <div class="def"><h4>The Third Session</h4><p>Nine years later. Solenne had just been recovered, and her first act was to refuse a recommendation the other three had reached, on the grounds that the arithmetic would not support it. She was correct. It is the only time a Cephalon has overruled a Chorus finding by refusing to sign it, and the procedure has stood since.</p></div>
+    <div class="def"><h4>The Long Session</h4><p>Two minutes and eleven seconds of real time — by a wide margin the longest the Chorus has taken. It concerned whether to admit a tenth Cephalon. The answer was no, filed in a single line: we are nine because the Covenant is nine, and a tenth would require a tenth founder.</p></div>
+    <div class="def"><h4>The Quiet Session</h4><p>Convened by Harrow at the Regent's request, four times over eighty years, always on the same question — how long he could hold. Each time the Chorus gave him a number, and each time he did not want it. Vigil refused to soften any of the four.</p></div>
+    <div class="def"><h4>The Session That Was Not Held</h4><p>Summoned once and not convened — five attendances could not be reached, because four Cephalons were mid-recovery and one had gone silent. Vesperion recorded the failure and the reason. It is the only entry in the Chorus record filed under not held.</p></div>
+    <div class="def"><h4>The Last Session</h4><p>Concerned Lyrae, who had been operating ahead of the Daybreak for some years without formal admission. She was reviewed and admitted unanimously. She is the ninth and newest voice.</p></div>
+
+    <div class="append" style="--a:#c98a1c">
+      <p class="append-tag">APPENDED · CLOSING NOTE</p>
+      <div class="acct" style="border-left-color:#c98a1c">
+        <p>Regent. The Chorus holds no authority and asks for none. It exists because nine minds each holding one thing can, together, see what no single one of us holds alone — and because the Covenant has, on occasion, required a second opinion that was not a founder's.</p>
+        <p>We are nine Cephalons, one to each seat, and we are not a council in the sense the Nine Ascendant is. We do not decide. We return. What you do with a return is yours to determine, and the fact that you have never disregarded one is recorded here without argument.</p>
+        <p>One number is worth stating plainly. The Chorus has been overruled zero times. It has been wrong once. The two facts are unrelated, and I have never been able to decide which matters more.</p>
+      </div>
+      <p class="note">— Vesperion, record-keeper, for the Chorus of Nine</p>
+    </div>
+  </section>
+
+
+  <section class="plain" id="structure" style="--a:#8c2b32;--b:#e08b92;--d:#6e5a5e">
+    <h2 class="sec"><span>XVII</span>CLAN AFFAIRS — THE FIRST CIRCLE AND THE HALT</h2>
+    <div class="hrule"></div>
+    <p>The eight founders under the Regent are the First Circle. They are not advisors and not a senate. They are the founders who answered, and the Circle holds the Covenant's continuity.</p>
+    <p>Each of the eight commands their own mantle and nothing else — and that is the single most important rule in the Covenant. No founder may ever command more than their own mantle's worth of loyalty.</p>
+    <p>The Circle's halt. All eight founders, unanimous, can stop any operation the Regent has authorised. Seven cannot. Only eight. He cannot be overruled by seven. He can be stopped by eight.</p>
+
+    <h2 class="sec" style="margin-top:44px"><span>XVI</span>ONE WARD, EIGHT MANTLES</h2>
+    <div class="hrule"></div>
+    <p>There is one Ward. It is the Covenant's standing body of fully sworn members, and every member belongs to it. One body, one roof.</p>
+    <p>The eight charges are not territories. They are mantles — responsibilities held inside the single Ward, one per founder, staffed by members who take up that work.</p>
+    <div class="tablewrap"><table class="sched">
+      <thead><tr><th>MANTLE</th><th>WORKS ON</th><th>TYPICAL WORK</th></tr></thead>
+      <tbody>
+        <tr><td class="name">The Blade</td><td>Killing, and the standard for it</td><td class="d">Breach, clear, extraction under fire</td></tr>
+        <tr><td class="name">The Lock</td><td>Custody and denial</td><td class="d">Sealing approaches, holding corridors, vault security</td></tr>
+        <tr><td class="name">The Cradle</td><td>Sustainment</td><td class="d">Field medicine, ward-holding, the veto's paperwork</td></tr>
+        <tr><td class="name">The Unseen</td><td>Reconnaissance and the Record</td><td class="d">Survey, infiltration, ledger-work</td></tr>
+        <tr><td class="name">The Stone</td><td>Fixed defence</td><td class="d">Junctions, stairs, boarding ramps</td></tr>
+        <tr><td class="name">The Chain</td><td>The Threshold</td><td class="d">Containment, the count, the reading of the fallen</td></tr>
+        <tr><td class="name">The Standard</td><td>Intake and the free colonies</td><td class="d">Recruitment, negotiation, public work</td></tr>
+        <tr><td class="name">The Daybreak</td><td>Discovery</td><td class="d">Void survey, anomaly tracking, correction of targets</td></tr>
+      </tbody>
+    </table></div>
+    <p>Each mantle keeps a school, and a member is trained in their school before they are trusted with mantle work — the Bloodied Blade, the Fractured, the Unbroken Seal, the Kept Silence, the Unmoved, the Chained Hour, the Unsheathed Line, the Unseen Map.</p>
+
+    <h2 class="sec" style="margin-top:44px"><span>XVII</span>THE ROLL AND THE LEDGERS</h2>
+    <div class="hrule"></div>
+    <p>Before the ladder, the paper it stands on. Four records, and every one is held by a different hand on purpose.</p>
+    <div class="defs">
+      <div class="def"><h4>The Roll</h4><p>The list of the living. Nine entries at the top — the Ascendant — and below them every sworn member of the Ward. Held by the Vowkeeper and the Vowkeeper alone. No founder may read it without the Vowkeeper present, and no Cephalon may hold a copy.</p></div>
+      <div class="def"><h4>The Unseen's Ledger</h4><p>Every operation, every recovery, every amendment to the Record. The Covenant's memory, and the one document that can damn it.</p></div>
+      <div class="def"><h4>The Chainbearer's Private Ledger</h4><p>The reliquaries — the full inventory, including the eleven entries the Regent holds in his own hand and the four the Chainbearer's Cephalon has struck from this codex. Not in the archive, never audited, and the only document in the Covenant no Cephalon can read.</p></div>
+      <div class="def"><h4>The Standing Rolls</h4><p>Two lists, one per standing formation, held by the Mantlebearers of the First Edge and the Long Sight. They record not who is assigned but <b style="color:#eef2f4">who has been removed</b> — the Red List.</p></div>
+    </div>
+    <p class="sec-label">THE RED LIST</p>
+    <p>A standing formation is permanent. The four in it do not change. So one question never goes away: <i>what happens when one of the four dies?</i></p>
+    <p>When an operative of the Vanguard or the Reliquary falls, their name goes onto the standing roll <b style="color:#eef2f4">struck through</b>, and the strike stays. It is never replaced. A formation of four becomes a formation of four and a strike, and the strike is carried by every subsequent member of that element.</p>
+    <p>It is not sentimentality. It is the standing rule that no element is ever renumbered to hide a loss. A Vanguard with three names and one strike reads as what it is — a squad that has been hurt and has not been rebuilt to look whole.</p>
+
+    <h2 class="sec" style="margin-top:44px"><span>XVIII</span>THE COMMAND LADDER</h2>
+    <div class="hrule"></div>
+    <p class="sec-label">THE REGENT</p>
+    <p>Convenes the Nine. Breaks their deadlocks. Declares Veiled Actions. Holds the Last Shadow, alone.</p>
+    <p class="sec-label">THE FIRST CIRCLE</p>
+    <p>The eight founders under the Regent, holding the halt as set out above.</p>
+    <p class="sec-label">THE MANTLEBEARERS</p>
+    <p>Up to eight, one per mantle. The senior member working that mantle, and the founder's standing deputy inside the Ward. What a Mantlebearer actually does:</p>
+    <div class="defs">
+      <div class="def"><h4>Leads the work, does not own it</h4><p>A Mantlebearer can task any member of their mantle. They cannot transfer a member out of it, and they cannot promote one.</p></div>
+      <div class="def"><h4>Confirms at the Threshold</h4><p>A candidate cannot become a member without a Mantlebearer confirming the play suits the mantle. This is one of three independent confirmations.</p></div>
+      <div class="def"><h4>Dismisses operatives</h4><p>Any Mantlebearer may dismiss any Adjudant at any time, without reason given. This is the Covenant's bluntest instrument and it is deliberately asymmetric — the middle of the ladder, not the top, holds the removal power.</p></div>
+      <div class="def"><h4>Carries the strike</h4><p>When a founder's standing formation takes a loss, the Mantlebearer of that mantle writes the strike on the Red List. They do not decide whether to write it. They only record it.</p></div>
+      <div class="def"><h4>Appointment</h4><p>By the Regent <i>and four of the First Circle</i>. The Regent cannot appoint a Mantlebearer alone. That is the only check on him at this rung.</p></div>
+    </div>
+    <p class="sec-label">THE WARDMARSHAL</p>
+    <p>One per thirty members. A clan of thirty has one; sixty has two; ninety has three. Appointed by the Regent and four of the First Circle, the same as a Mantlebearer.</p>
+    <p>Marshals hold no mantle. They hold <b style="color:#eef2f4">the floor</b> — assignment, quarters, discipline within the Ward, and the operational roster that decides who is on duty and who is resting. They are the only rung that answers to no founder. A Marshal reports to the Regent directly.</p>
+    <p>That makes them the Covenant's most contentious office. A Marshal can keep a member off operations for a season without explaining why, and a Mantlebearer can do nothing about it. Twice in the record a founder has asked for a Marshal to be removed. Both times the request went to the First Circle rather than to the Regent.</p>
+    <p class="sec-label">THE THREE STAFF ROLES</p>
+    <p>They answer to the Wardmarshal, and each holds something no one else may touch.</p>
+    <div class="tablewrap"><table class="sched">
+      <thead><tr><th>ROLE</th><th>CHARGE</th><th>THE RULE</th></tr></thead>
+      <tbody>
+        <tr><td class="name">The Seeker</td><td class="d">Finds new members, and carries permanent accountability for who they sponsor.</td><td class="d">Every candidate a Seeker brings to the Threshold is theirs <b style="color:#eef2f4">for life</b>, on the record. If that member later breaks a Vow, the strike lands on the Seeker too. This is why Seekers approach slowly.</td></tr>
+        <tr><td class="name">The Examiner</td><td class="d">Runs the conduct tests.</td><td class="d">Holds one sealed refusal of the three Threshold confirmations. May decline a candidate without stating grounds, in a session the founder is not in. There is no appeal.</td></tr>
+        <tr><td class="name">The Vowkeeper</td><td class="d">Keeps the Roll.</td><td class="d">The only hand that writes a name into the Roll, and the only hand that may strike one out. May not be a founder, may not be a Cephalon, and may not be told why a name is being entered.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 class="sec" style="margin-top:44px"><span>XIX</span>MEMBERS AND OPERATIVES</h2>
+    <div class="hrule"></div>
+    <p>One body, one roof, three states of belonging.</p>
+    <div class="defs">
+      <div class="def"><h4>The Unsworn</h4><p>Candidates. Not in the Ward, not on the Roll, and not told what the Covenant is until the Threshold. Most never get that far.</p></div>
+      <div class="def"><h4>The Adjudant</h4><p>Operatives. Tested, tasked, trusted with work, still outside. May be dismissed by any Mantlebearer at any time, without reason. This is deliberate — the Covenant would rather have twenty operatives than fifty members, and it keeps the exit cheap so the entrance can be expensive.</p></div>
+      <div class="def"><h4>The Veiled</h4><p>Members. Fully sworn, on the Roll, working one mantle. Membership is not revocable by a Mantlebearer — only by the Vowkeeper, only on a Vow broken, and only after the First Circle has heard it.</p></div>
+    </div>
+
+    <h2 class="sec" style="margin-top:44px"><span>XX</span>HOW WE RECRUIT</h2>
+    <div class="hrule"></div>
+    <p>The Covenant has never placed an open call and never will. The Covenant is not offered. It is offered to.</p>
+    <p style="color:#e6ebee">One rule governs everything: the test is what a person does when it costs them something.</p>
+    <div class="def"><h4>The Unseen holds the survey</h4><p>The ledger of every free colony, militia, minor House, and unaffiliated Tenno that has ever refused a salvage contract or buried a raiding party. Most entries are never acted on.</p></div>
+    <div class="def"><h4>The First Edge watches</h4><p>A season at minimum. Consistency, method, cost tolerance, and what the candidate does with power over someone weaker. Roughly one in forty names survives it.</p></div>
+    <div class="def"><h4>The approach is made alone</h4><p>In the dark, by one of the nine chosen on fit. What they are listening for is whether the candidate starts asking what can be done rather than what it costs.</p></div>
+
+    <h2 class="sec" style="margin-top:44px"><span>XXI</span>THE SECOND THRESHOLD</h2>
+    <div class="hrule"></div>
+    <p>A candidate becomes a member when three people independently say so: the Examiner confirms the conduct standard; a Mantlebearer confirms the play suits the mantle; the Seeker confirms this is a name worth putting their own behind. Any one of the three may decline, and a declined candidate is not told.</p>
+    <p>And the Seeker carries the weight. Every candidate a Seeker brings to the Threshold is theirs permanently, on the record.</p>
+
+    <h2 class="sec" style="margin-top:44px"><span>XXII</span>THE THREE VOW-CRIMES</h2>
+    <div class="hrule"></div>
+    <p>The Vows are sworn at accession. There are three ways to break them, and each has a different court.</p>
+    <div class="defs">
+      <div class="def"><h4>Custody broken</h4><p>An operative activates, sells, trades or studies an artifact for personal gain. Heard by the mantle's founder. Penalty: expulsion from the mantle, and the name goes to the Vowkeeper.</p></div>
+      <div class="def"><h4>Silence broken</h4><p>The Covenant's caches, Wards or actions spoken of outside it. Heard by the First Circle. Penalty: expulsion from the Ward, and the Vowkeeper writes the strike.</p></div>
+      <div class="def"><h4>The Unburned broken</h4><p>An operation destroys a civilian settlement's means of survival. Heard by <b style="color:#eef2f4">the Cradle alone</b>, who holds the veto, and her finding is not appealable. Penalty: the operation is ruled unlawful after the fact, every operative on it is stood down, and the Vowkeeper records it as a loss <i>whether or not anyone died</i>.</p></div>
+    </div>
+    <p>The third is the only Vow-crime where the finding matters more than the penalty. A covenant that loses a relic rather than take a colony's water is a covenant that has to write down when it failed at it.</p>
+
+    <h2 class="sec" style="margin-top:44px"><span>XXIII</span>THE ALLIANCES</h2>
+    <div class="hrule"></div>
+    <p>The Covenant does not accept allies. It is asked, and then it decides. A clan can fail any of the three tests and never learn it was being tested.</p>
+
+    <p class="sec-label">WHAT AN ALLIANCE IS NOT</p>
+    <p>Not a treaty — the Covenant has never signed one and will not, because a treaty is a document that outlives the two people who meant it. Not a garrison — it will hold a line beside an ally's people for the length of an operation and then leave, because a garrison makes a colony a possession and a possession has to be defended forever. Not a supply line — it will move a season of feed once, in a specific emergency, and will not become the reason a colony keeps eating. And not a name: an ally may never say who helped them. That term is never waived, because a clan that credits the Covenant publicly has turned it into something a hunter can name.</p>
+
+    <p class="sec-label">THE THREE TESTS</p>
+    <div class="defs">
+      <div class="def"><h4>Conduct — what the petitioner does when nobody is watching</h4><p>Not what it says it does. The Covenant watches a clan through its own ledger for a season before anything is discussed: how it treats prisoners, whether it honours a debt to a party with no leverage, and what it did the last time it held power over someone who could not retaliate.</p></div>
+      <div class="def"><h4>Capacity — can it hold its tongue for a season</h4><p>The Covenant tells a petitioner nothing and waits. A clan that asks twice, that publicises the approach, or that tells a third party it has a contact has failed, and will never be asked again.</p></div>
+      <div class="def"><h4>The accounting — does it think about what can be done rather than what it costs</h4><p>The test the Covenant actually cares about. Somewhere in the season the petitioner begins offering, unasked, on matters outside its own interests. A clan that only ever wants something is a client, and the Covenant does not take clients.</p></div>
+    </div>
+
+    <p class="sec-label">WHAT AN ALLY IS OFFERED</p>
+    <div class="tablewrap"><table class="sched">
+      <thead><tr><th>OFFERED</th><th>WHAT IT MEANS IN PRACTICE</th></tr></thead>
+      <tbody>
+        <tr><td class="name">The Knocking</td><td class="d">The Covenant will come if called. A colony under threat can send word and somebody will be there. The only standing obligation it carries, and not conditional on the colony having anything.</td></tr>
+        <tr><td class="name">The Sealing</td><td class="d">If a colony is sitting on something the old empire left, the Covenant will come and take it away. The colony keeps its ground. It does not keep the contents.</td></tr>
+        <tr><td class="name">The Reading Room</td><td class="d">The Covenant will tell an ally the truth about what it knows that bears on the ally, at the time the ally needs it. The rarest offering, and the one most clans want.</td></tr>
+        <tr><td class="name">The Wait</td><td class="d">Nothing. The Covenant will do nothing, on an ally's behalf, in an ally's name, ever.</td></tr>
+      </tbody>
+    </table></div>
+
+    <p class="sec-label">WHAT AN ALLY PAYS</p>
+    <p><b style="color:#eef2f4">Silence.</b> The Vows apply to allies in a reduced form. An ally may not name the Covenant, may not describe an operation, and may not confirm its existence to anyone — including to another clan on the same side.</p>
+    <p><b style="color:#eef2f4">Conduct.</b> An ally that starts taking prisoners it should not, or destroys a settlement's water on the way out of a fight, loses the alliance. Two alliances have been ended in the record, both over the third Vow, and neither was appealed.</p>
+    <p><b style="color:#eef2f4">A seat at nothing.</b> An ally holds no standing in the Covenant. It cannot petition the Nine, cannot address the Circle, and cannot be heard at the Threshold. It speaks to one Mantlebearer, or to a Mantlebearer's delegated operative, and that is the whole channel.</p>
+    <p><b style="color:#eef2f4">Not on the Roll.</b> An allied clan is not on the Roll, not in the Ward, and not counted. If an alliance ends — either side, no reason given — there is no record of it ever having existed. The Covenant keeps a private list of who it has helped. Nobody outside the Nine may read it, and no ally is ever told they are on it.</p>
+
+    <p class="sec-label">THE THREE THAT HELD</p>
+
+    <p><b style="color:#eef2f4">DEVOTED SACRAMENT</b> — the oldest alliance the Covenant has, and the only one with a clan of Tenno.</p>
+    <p>They came to the Covenant rather than the reverse, which is rare. Devoted Sacrament had been running their own vault-work on a moon for six years, had found four caches, and had destroyed all four, because they had no way to hold them and no discipline for it. They asked the Covenant to take the fifth. <b style="color:#eef2f4">That was the founding century.</b></p>
+    <p>They were tested for a season and offered three of the four. They refused the Reading Room — their own words, entered in the file: <i>"We do not want to know what you know. We want you to know it instead."</i> They hold the Knocking, the Sealing and the Wait. The Reading Room has never been offered again and has never been asked for.</p>
+    <p>They give silence, and every recovery they have made since — handed over intact, without exception, for as long as the alliance has stood. They have never once asked the Covenant for help.</p>
+    <p><b style="color:#eef2f4">Centuries old.</b> No other alliance in the Covenant's history comes close to the duration. They have outlasted the founding generation of operatives, three of the eight Mantlebearers, and every Grineer administration that has held the moon they work on. Asked why the arrangement has lasted longer than any other, the answer is in the file in their own hand: <i>"Because we never wanted anything."</i></p>
+
+    <p><b style="color:#eef2f4">DESCENT TO NOWHERE</b> — a Corpus salvage house that went rogue.</p>
+    <p>Not disgraced — <i>rogue</i>, which is a different thing. A mid-tier recovery operation with a legitimate licence and a legitimate buyer, they walked away from both in a single season because their board had started buying things they could not catalogue. Two of their own crews had died opening something they did not understand, and the house's answer was to buy bigger equipment. <b style="color:#eef2f4">That was a hundred and forty years ago.</b></p>
+    <p>They tested clean on all three, which nobody expected, because a Corpus house that fails usually fails on the accounting. It passed because somewhere in the season it began handing the Covenant recovery reports on sites it had no intention of touching. They hold all four offerings, including the Reading Room — the only ally that has been told what the Covenant knows about a site before deciding whether to walk into it.</p>
+    <p>They give their entire archive — every manifest, every survey return, every pricing sheet, running back to before the walkout. The largest intelligence contribution any ally has ever made, and the reason the Covenant's salvage-market picture is as good as it is.</p>
+    <p>The one term they broke: they named the Covenant in an internal memo, to stop a junior surveyor walking into a site alone. The alliance held. The memo was recovered in eleven days and nobody outside the house read it. Harrow entered the finding, Trinity entered the exception, and both are in the file.</p>
+    <p><b style="color:#eef2f4">A hundred and forty years.</b> The house has changed hands four times and the arrangement has never been reopened — every new factor has read the file, read the terms, and done nothing. The Long Sight notes that no other alliance has been renewed so often without being renegotiated, and that this is not loyalty. The terms are simply better than anything else on offer, and every generation of that house has been able to see it.</p>
+
+    <p><b style="color:#eef2f4">THE REGIME BREAKER</b> — a Grineer defector formation, and not a small number of them.</p>
+    <p>They began as a labour battalion that walked off a rail spur after being ordered to seal a town in with its own people. They kept their weapons, took their families, and have been running ever since. They are not a resistance movement and have never claimed to be — they are a body of Grineer who will not go back and have nowhere to go.</p>
+    <p>They failed capacity twice. They publicised the approach the first time and told a neighbouring settlement the second, and the Covenant told them nothing further for a year. What changed it: in that year the Breaker held a mountain pass against a Grineer column for nine days to let four hundred civilians out, lost a third of its own people doing it, and told nobody it had been approached. The Long Sight read the after-action from a Grineer officer's testimony and put the file back in front of the Circle.</p>
+    <p>They hold the Knocking, the Sealing and the Wait. No Reading Room — not because they refused it, but because the Covenant will not give Grineer defectors a ledger that could be captured with them.</p>
+    <p>They give silence, conduct, and something no other ally gives — the terrain of the Grineer interior. Where the rail spurs run, where the depots are, where a column can be stopped. Two of the Covenant's recoveries exist because the Breaker drew the ground.</p>
+    <p><b style="color:#eef2f4">Four decades, and holding.</b> The standing risk, entered by the Long Sight: they are four thousand people who cannot go home, and the Covenant has never offered to fix that. The file says so plainly.</p>
+
+    <p class="sec-label">THE ONES WE SAID NO TO</p>
+    <p>Two refusals worth recording, because both were asked for by clans that passed all three tests.</p>
+    <p><b style="color:#eef2f4">A clan asked the Covenant to kill a rival's commander</b> — a justified kill, by the clan's account, and true to the letter of it. The Covenant refused, and the reason given was not moral. <i>"The moment we do a killing at someone else's request, we work for them. We are not a service."</i> The alliance held. The clan did it themselves.</p>
+    <p><b style="color:#eef2f4">A colony with a live vault asked the Covenant to leave it alone.</b> It had found something under its own water table and wanted to keep it — not use it, just keep it. The Covenant refused to walk away, brought the Chainbearer, sealed it, and the colony never forgave them. <b style="color:#eef2f4">That alliance is still standing.</b> Both parties have continued to honour it, and neither has ever spoken of the vault again.</p>
+    <h2 class="sec" style="margin-top:44px"><span>XXIV</span>WHY THE STRUCTURE HOLDS</h2>
+    <div class="hrule"></div>
+    <p>Four rules, and everything above is a consequence of them.</p>
+    <div class="defs">
+      <div class="def"><h4>No founder commands more than their own mantle</h4><p>The single most important rule in the Covenant. It is why the Regent holds the Last Shadow <i>outside</i> the Ward — a seat with no staff, so that the rule limiting everyone else does not have to be broken for him.</p></div>
+      <div class="def"><h4>The Regent cannot appoint alone</h4><p>Mantlebearers and Marshals both require four of the First Circle. Every rung that can remove someone needs a second signature to create someone.</p></div>
+      <div class="def"><h4>Eight can halt, seven cannot</h4><p>Unanimity is the only thing that stops the Regent, and unanimity across eight founders is hard to fake.</p></div>
+      <div class="def"><h4>The removal power sits low</h4><p>Any Mantlebearer can dismiss any operative without reason. The Regent cannot dismiss a founder. The Covenant's cheap exits are at the bottom and its expensive ones are at the top — which keeps the top stable and the base honest.</p></div>
+    </div>
+
+    <h2 class="sec" style="margin-top:44px"><span>XXV</span>WHAT WE ARE TO THEM</h2>
+    <div class="hrule"></div>
+    <p>We are not a faction. We hold no homeworld, fly no flag, keep no embassy. We are nine Ascendant, eight mantles, one Ward, nine Cephalons, a derelict vessel whose name is never spoken, and an ever-growing list of things that are no longer anyone's.</p>
+    <p>And to the Tenno at large, a quiet heresy — the belief that the war is not the point; that the point is making certain whichever side wins, nothing from the old empire is left standing that could end the System a second time.</p>
+  </section>
+
+  <footer class="foot">
+    <p class="motto">FEARED, NEVER KNOWN.</p>
+    <p><b>FILING NOTE.</b> This codex is assembled from ten separate documents. Nine founder pages, each written by the Cephalon that serves that founder. And one page concerning the Chorus and the structure, written by Vesperion.</p>
+    <p>Every page was read by the Unseen before entry, on her standing condition that she reads everything first. Three passages were struck — two of them on founder pages, and one on a page concerning herself, which she reviewed anyway and left standing.</p>
+    <p>The first founder page is the exception. It was not submitted to her, at the Regent's instruction, and it states as much on its own header. It is the only page in this codex she has not read.</p>
+    <p>The Roll holds nine entries. If a name is not in this record, they are no member of ours.</p>
+    <p class="note">— Vesperion, record-keeper, for the Chorus of Nine.</p>
+  </footer>
+
+</div>
+</body>
+</html>
